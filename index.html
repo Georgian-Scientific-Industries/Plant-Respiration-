@@ -1,0 +1,4101 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>მცენარის სუნთქვის და ფოთლის სტრუქტურის სიმულაცია - Xპერიმენტ Lab</title>
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        
+        /* Logo styling */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        
+        .logo-image {
+            width: 40px;
+            height: 40px;
+            margin-right: 8px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2a6b39;
+            margin-top: 60px;
+            margin-bottom: 30px;
+        }
+        
+        .controls {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .controls h2 {
+            margin-bottom: 20px;
+            text-align: center; /* Center align the heading */
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        /* Style for the icons */
+        label i {
+            margin-right: 8px;
+            width: 20px;
+            text-align: center;
+            color: #2a6b39;
+            transition: all 0.3s ease;
+        }
+        
+        /* Specific icon styling to match sliders */
+        label[for="light"] i {
+            color: #f39c12;
+            text-shadow: 0 0 5px rgba(243, 156, 18, 0.3);
+        }
+        
+        label[for="co2"] i {
+            color: #3498db;
+            text-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        
+        label[for="temp"] i {
+            color: #e74c3c;
+            text-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
+        }
+        
+        label[for="humidity"] i {
+            color: #3498db;
+            text-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        
+        label[for="time"] i {
+            color: #9b59b6;
+            text-shadow: 0 0 5px rgba(155, 89, 182, 0.3);
+        }
+        
+        /* Hover effect for labels */
+        .control-group:hover label i {
+            transform: scale(1.2);
+        }
+        
+        /* Improved slider styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            margin: 10px 0;
+        }
+        
+        /* Colored tracks for sliders */
+        #light {
+            background: linear-gradient(to right, #f39c12, #fad7a0);
+        }
+        
+        #co2 {
+            background: linear-gradient(to right, #4d4d4d, #868687);
+        }
+        
+        #temp {
+            background: linear-gradient(to right, #e74c3c, #f5b7b1);
+        }
+        
+        #humidity {
+            background: linear-gradient(to right, #3498db, #aed6f1);
+        }
+        
+        #time {
+            background: linear-gradient(to right, #9b59b6, #d7bde2);
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #2a6b39;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #2a6b39;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            width: 20px;
+            height: 20px;
+            box-shadow: 0 0 5px rgba(42, 107, 57, 0.5);
+        }
+        
+        input[type="range"]::-moz-range-thumb:hover {
+            width: 20px;
+            height: 20px;
+            box-shadow: 0 0 5px rgba(42, 107, 57, 0.5);
+        }
+        
+        /* Customized sliders for different parameters */
+        #light::-webkit-slider-thumb {
+            background: #f39c12; /* Sun-like color */
+        }
+        
+        #light::-moz-range-thumb {
+            background: #f39c12;
+        }
+        
+        #co2::-webkit-slider-thumb {
+            background: #4d4d4d; /* Science blue */
+        }
+        
+        #co2::-moz-range-thumb {
+            background: #4d4d4d;
+        }
+        
+        #temp::-webkit-slider-thumb {
+            background: #e74c3c; /* Warm red */
+        }
+        
+        #temp::-moz-range-thumb {
+            background: #e74c3c;
+        }
+        
+        #humidity::-webkit-slider-thumb {
+            background: #3498db; /* Water blue */
+        }
+        
+        #humidity::-moz-range-thumb {
+            background: #3498db;
+        }
+        
+        #time::-webkit-slider-thumb {
+            background: #9b59b6; /* Purple for time */
+        }
+        
+        #time::-moz-range-thumb {
+            background: #9b59b6;
+        }
+        
+        .value-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 14px;
+        } 
+        
+        /* Value indicators with themed colors */
+        #light-value {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        #co2-value {
+            color: #4d4d4d;
+            font-weight: bold;
+        }
+        
+        #temp-value {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        #humidity-value {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        #time-value {
+            color: #9b59b6;
+            font-weight: bold;
+        }
+        
+        /* Effective Light Level Indicator */
+        .effective-light {
+            margin-top: 8px;
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 8px;
+            border-radius: 5px;
+        }
+        
+        .effective-light-label {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        
+        .effective-light-label i {
+            color: #f39c12;
+            margin-right: 6px;
+            text-shadow: 0 0 5px rgba(243, 156, 18, 0.3);
+        }
+        
+        .light-indicator-container {
+            height: 8px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        #effective-light-indicator {
+            height: 100%;
+            background: linear-gradient(to right, #f1c40f, #f39c12);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .simulation {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        #canvas-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        #canvas {
+            width: 100%;
+            border-radius: 5px;
+            display: block;
+        }
+        
+        #microscope-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 5px;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.7);
+        }
+        
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .view-toggle button {
+            background-color: #e0e0e0;
+            border: none;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .view-toggle button.active {
+            background-color: #333333;
+            color: white;
+        }
+        
+        .particle-button {
+            padding: 6px 12px !important;
+            font-size: 13px !important;
+            min-width: 60px;
+            border-radius: 4px !important;
+            margin: 0 4px !important;
+            cursor: pointer;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Circle inside button to match particle appearance */
+        .particle-button::before {
+            content: "";
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            margin-right: 5px;
+            vertical-align: middle;
+            border: 1px solid white;
+        }
+        
+        /* Particle toggle buttons styling */
+        #toggle-co2 {
+            background-color: #e0e0e0;
+            border: 2px solid #000000;
+            transition: all 0.3s ease;
+        }
+        
+        #toggle-co2::before {
+            background-color: #000000;
+        }
+        
+        #toggle-o2 {
+            background-color: #e0e0e0;
+            border: 2px solid #FF0000;
+            transition: all 0.3s ease;
+        }
+        
+        #toggle-o2::before {
+            background-color: #FF0000;
+        }
+        
+        #toggle-h2o {
+            background-color: #e0e0e0;
+            border: 2px solid #0088FF;
+            transition: all 0.3s ease;
+        }
+        
+        #toggle-h2o::before {
+            background-color: #0088FF;
+        }
+        
+        #toggle-all {
+            background-color: #e0e0e0;
+            border: 2px solid #4a4a4a;
+            transition: all 0.3s ease;
+        }
+        
+        #toggle-co2.active {
+            background-color: #000000;
+            color: white;
+        }
+        
+        #toggle-o2.active {
+            background-color: #FF0000;
+            color: white;
+        }
+        
+        #toggle-h2o.active {
+            background-color: #0088FF;
+            color: white;
+        }
+        
+        #toggle-all.active {
+            background-color: #2a6b39;
+            color: white;
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .metric {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .metric-name {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .metric-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2a6b39;
+        }
+        
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .preset-button {
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .info {
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .scale-indicator {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: none; /* Hide HTML scale bar completely */
+        }
+        
+        /* Add styles for new scale bar */
+        #scale-bar-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease; /* Smooth transition for position changes */
+        }
+        
+        #scale-bar {
+            height: 4px;
+            width: 90px;
+            background-color: #000;
+            position: relative;
+            transition: all 0.3s ease; /* Smooth transition for width changes */
+        }
+        
+        #scale-bar:before, #scale-bar:after {
+            content: "";
+            position: absolute;
+            width: 1px;
+            height: 10px;
+            background-color: #000;
+            top: -3px;
+        }
+        
+        #scale-bar:before {
+            left: 0;
+        }
+        
+        #scale-bar:after {
+            right: 0;
+        }
+        
+        /* Add color styling for each control type */
+        .control-group label[for="time"] i {
+            color: #8e44ad; /* Purple for time/clock */
+        }
+        
+        .control-group label[for="co2"] i {
+            color: #4d4d4d; /* Darkish grey for CO2 */
+        }
+        
+        .control-group label[for="temp"] i {
+            color: #e74c3c; /* Red for temperature */
+        }
+        
+        .control-group label[for="humidity"] i {
+            color: #3498db; /* Blue for humidity */
+        }
+        
+        /* Slider color customization */
+        #time::-webkit-slider-thumb {
+            background: #8e44ad;
+        }
+        
+        #co2::-webkit-slider-thumb {
+            background: #4d4d4d;
+        }
+        
+        #temp::-webkit-slider-thumb {
+            background: #e74c3c;
+        }
+        
+        #humidity::-webkit-slider-thumb {
+            background: #3498db;
+        }
+        
+        /* For Firefox */
+        #time::-moz-range-thumb {
+            background: #8e44ad;
+        }
+        
+        #co2::-moz-range-thumb {
+            background: #4d4d4d;
+        }
+        
+        #temp::-moz-range-thumb {
+            background: #e74c3c;
+        }
+        
+        #humidity::-moz-range-thumb {
+            background: #3498db;
+        }
+        
+        /* Color for the value displays */
+        #time-value {
+            color: #8e44ad;
+        }
+        
+        #co2-value {
+            color: #4d4d4d;
+        }
+        
+        #temp-value {
+            color: #e74c3c;
+        }
+        
+        #humidity-value {
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo and brand text container -->
+    <div class="logo-container">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALAAAACwCAYAAACvt+ReAAAACXBIWXMAACiaAAAomgEXOiGyAAAErGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI1LTAzLTA1PC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjIwNzFhOGUyLTRlOTUtNDFlYi1hY2RlLTE1OTg3NWE1ZjJlYzwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5VbnRpdGxlZCBkZXNpZ24gLSAxPC9yZGY6bGk+CiAgIDwvcmRmOkFsdD4KICA8L2RjOnRpdGxlPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpwZGY9J2h0dHA6Ly9ucy5hZG9iZS5jb20vcGRmLzEuMy8nPgogIDxwZGY6QXV0aG9yPk1pa2EgTmFuPC9wZGY6QXV0aG9yPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczp4bXA9J2h0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8nPgogIDx4bXA6Q3JlYXRvclRvb2w+Q2FudmEgZG9jPURBR2dsa2ZMZ0w4IHVzZXI9VUFGek8wb0dVcEkgYnJhbmQ9QkFGek82Y0tfNTQgdGVtcGxhdGU9PC94bXA6Q3JlYXRvclRvb2w+CiA8L3JkZjpEZXNjcmlwdGlvbj4KPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KPD94cGFja2V0IGVuZD0ncic/PlgaFwUAABJdSURBVHic7Z0HrBbFFsc3L3kvCgIWQAXsBUVAr1gAGxqUa8UuGhEVBWLvsSDYEOwFCypWLBBQL6JwbXCfiCgiAjbs0gQ7iOIz7yXz9r+wZO93Z7bN7ncWvv8/+SUK7O7Z3fPNzpw5c8Zx0qm5S3+XiS5zXBa4rHBRhMQAvgKfge/Ah/o5q3wqVzVx6eNS6/LfMt0oqRzgU5Ncers0djJWN5fpBbhJUhnA1zo7GajKZUoBbohUJhOcVT6YSq1cZhXgJkhlM9OltZNQ8PrFBTCeELDIpZ0TUy2cVSNEaaMJCTLfpaUToX+6TC2AsYTo+LfLP5wQjSiAkYSEMcwxCH2M/xXAQELCgI92cDSqLYBxhMQBvlpP1QUwipAkdHMCYutL1jZqnNVq6vJ3AQwiJAnLXP7l4vQqgDGEpAFdX2dkAQwhJA0I+7L/S9ZavGjE7AIYQkga4LteZ1jaEELSsNQpgBGEpOU/TgGMIMQGcQMIsUHcAEJsEDeAEBvEDSDEBnEDCLFB3ABCbBA3gBAbxA0gxAZxAwixQdwAQmwQN4AQG8QNIMQGcQMIsUHcAEJsEDeAEBvEDSDEBnEDCLFB3ABCbBA3gBAbxA0gxAZxA0iB2W233dQBBxzgsd9++6mdd95ZbbLJJuJ2BRA3gBSAtm3bqhNPPFFdd911asyYMWrOnDkqSu+995667777vGMFbZd/eKT8tG/fXl122WWqpqZG/fzzz5HOGqWrrrpK6l7kHybJn8aNG6sjjzxSPfDAA2rBggWRDvnnn3+qqVOnqlGjRqmhQ4eqwYMHr+Gmm27yWukffvih3jG33HKLxL3JP1ySDzvttJMaOHCgevvttyMd9q233lJ33nmn6t27t+rYsWPsaxx//PFq5syZa85zxBFHlPs+5R80yQ70R6+//nr10UcfhTrsO++8o4YNG6YOOeQQtf7661tf95prrvHOO3HixHLfs/xDJ3age9C3b1/vk2/S999/r4YPH66qq6vVeuutl4sdo0ePVosWLSr3/cu/AJKO/fffXz3++ONef1Un9FFvu+02tccee5TFnq5du6qffvqp3M9B/kWQ+Gy11VZeFyFsIPbss8+q7t27l922Fi1aqBkzZpT7uvIvhURz4IEHqvHjxxud9ptvvlGXX36550RSNlZVValBgwaV+7ryL4foQV91wIABat68eUbHRZgLzi1tKzj33HPVpptuWu7ryt84qc8222yj7rjjDrV8+XKt08Khzz//fNW0aVNxW4P06NFD4rryN05WgVyDV155xdjaogsh0bcNss8++6hOnTo1+PNmzZpJ2ST/4iqdww8/3DjZsHLlSi/8tfXWW4vaeNFFF6nPP/+8nm1nnnmm2n333aWfn/wLrFSOO+44NXv2bK3jIj8B07bNmzcXtxOzeUH98ccfqra2Vi1btkzdfffd0vbJv8hKA5MOX375pdZxEbu95JJLcptsSMqee+5p7NJg+hlplhdccIGkjfIPqVLo37+/N1O1NjiuD5J/dMIP8IYbblALFy5UG220kaSN8g9pXeekk04ytrhLlixRF198ceEc1wfplqWC03766adqxYoVXgt98803e5ETIRvlH9K6ysEHH6xmzZqlddxvv/3Wa5GlbYziwQcfrGf3b7/95vWBoVNOOUVNmTLF++9GjRpJ2Sj/kPKkTZs26uijj/ZWGtx7771e4H/ChAnqzTffVGPHjlUjR470Yq4YqCBfNovRPmakXn31Va3jfvHFF17KYprzbrnllurYY4/18m5xfjgPwH9j+vj+++/3cnWR4oj7zuL5IUKiExz7xx9/9P4bAzrBdyzvZFmy2WabqbPOOku98MILqVca4NM4efJkdfrppyf6tG+//fbqueee054TSS6YqUp6Pzjnww8/7HU1kmrx4sXqscce874ENs/0xRdfrHfeYB4GIhHbbbcdHdgWhKTef//9xC85Sr///rs3kMFiRtO1d9xxR/XUU08Zz3H77bcnDvTDcdGqZqVff/3VW0KU9vmin+s/D1+IQuywww7S717e+WxAHkAejqvTiBEj6iXLoN/3zDPPGP89WuM0XRI4fF5CznDaARemrnv27OmFzdq1ayf+7tdqB954440zbaHiCvkJl156ab0fEAZkQdXV1aXKwW3ZsmW95Tl5CZ/9Ll26RNqDL4v0e14nHRjdhdIFhVHCNCgGO08++aTXwg0ZMkQ99NBD6vnnn/eW15gSZ0x64403vB8R7MGA6euvv/ZCS2nXhKFl/+yzz0Kvib4nbD7jjDPUXnvtpVq1auUdiwywXXfdVR1zzDHq1ltv9Za7Rwn9fORemOzBNQowTbzuOTDqEETpr7/+8kbGmBhI0hJuvvnm6qijjvI+/ThHlNDywnFwrE2xDwwUP/jgA+N10KIfdNBBic6J1hNRlzBhYNm6desGxyIqo7tehw4d1hQ58YnTktOBnVXZTq+//nqkUyGUlMXMENaZIYEFn9swYTkPFkbaXOuRRx4xnh9J6jbnRhcnLIKBkKL/b9E3RlKRKWoxadKkBsfj3HTgCDB4+Pjjj0Md6d133/VaiKyvjWQahLHChIwxtEZpzo/PtEmnnnpqJveASIHOidHq+wO6k08+2Qs7HnbYYcbz0IFTgv6mSZgVQnJ33jZgkiOsNYYdaT6npvzfq6++OlP7USPCn0GDsNjT/zt/tg2TFmHnwJL5UmG1s7B/yDtoGJgpMwm//nKGc7bYYgv1ySefGO3BzFSS7gvOpxMGg3nYj4EZnpnf5UHr6091x4kR04ETgk+oSfPnz/eC/eW2CaEuOJhJmPmKe67zzjtPew7MAOZlv/8DQ1ch+EVBKxx1LB04oaNg9kgnhLwknDdoW2nsNyjUa4hzHtPs3YYbbpir/ciXKBVWNUcdRwdOwLhx44wOIr0uDOy9995G+xDPjXMOTMWWCl2UvGzGD++1117zroMJEz8ZyGeDDTYIPZ4OHBMsHDTpiiuuELfPByEukzCqjzr+ww8/bHAcBqx52IqMPD+5KW0pVDpwTEypiGglpG0rxdQfRtgv6lhdAT6keWZpH+LnTz/9tHduTM4gHTPtuejAMQhbg4V8WGn7SkF4zST8Xdix06dPb3BMlhGIQw891EuphLCUybZGGuPAMfBbi1JhtkraNhPIKSidYgVRyTCmL01UXzQKtLqIhvjCtLqft2EDW+AYmCYLCpB3mjmmvA6sqEh7zmCrC6Fub1b20oEjQAKJThg5S9uWB2effbb2ftP0gxF6e+KJJ9acA5/2sGyzNNCBI0CRDJ3OOecccdvyAH16k5JEWzApEcx1wA8gjyqVdOAITFVqslqgWEReeukloxNfe+21oceiX1s6Zsg6hyIIHTgCnfLKCygKyOUIE3KTdQtLe/XqtWZVMIRkd8TP87SVDhwCdoTUCds5SduWNzfeeKPRgeGY3bp1W/Nvt912W6+LEBQWndpGLuJABw7htNNO077AqM/ougLqVQSF1b+lM2aljh7MLCsHdOAQTNOyJ5xwgrht5cKvQ4bwWrAqJdbZfffddw2ezcsvv+yVrcLqkXLYx4mMEFAoTifbohxrG8ES/Ri8okBLlLBAE7sVwdGz2PPNBFvgEO666y7ty0HWV1bXwGCoNAOrHKRZGoRoQpyFpTrB0RBjznpXeTpwCKaVF7vssktm18CnVkJJZsP23Xff0IT5pMJ0NSIWdOCcQb0DnSrFgbH/m67KD4q3YMIDiUFIgA+ua0siVJXERJFuGT0dOANQkEOnLLsQRXRgzJjpciJQxdKUuI9nguVICDGitkNS4VnTgTMG4TKdshzE5d0HNu2eGSxF5YO6athxs7RFRb83aegQtR+wyjhJWSo4Y9KlS4xChICCcTrZZGaVGxT/CwqVzC+88ELtvQZn0XxhWtjmEw8wvYw+r87ZSoUfHJbbxz23rgQAMt+En7v8iweo66VTlumAeYMqNxA2IuzTp0+Dv0dSkm6PDLSceZRo6ty5c6QjYzFn3FIA7EKEgClSndAqSdsWl9GjR2snXrCfGsoA6FovzEDmbRf6zKV7vAWFwWOc87AFjgAB+VJh4aO0XWnBVgJfffVVg3tCuQBdvzhPMFjUrcHzFecLwBY4ApQ51SnrgHzeoAIOPs2lwgANg60mTZqI2IWlRohu6IS0zqjj6cARmKaT86xUkyX9+vXTdhUgrJZA+VZpG1F0xSTUjQg7lg5swF/vhlWzOiEfQNrGMFBcEC9SJ/Qbs5yMyQJ/a6xSoXZE2HF0YA3IpkIBZ///TY6AmSppW4Mg/xb92KVLlxraM+Xt3SFtp44BAwZo7cVWZGHH0YFLwM4/KBANYXss/BkKVOuEVEPpFw+Q5ojaYlGFr6E022qVA1NNYtRBDjuOUYgAmNYNhnbgFPhztLQmSfYhMcGAjLkkGWLCewiH3otOqEcXdhwdOAA2WwkK+az+3wWLcgSFgVC57cQ0bZrdkJDfEHZebA44ePDgBmADm7zvCV8RnbChYdhx7EKsBsvAg8LMVTARG4WXTcLuPHnbhxYKM4C6VRC+0BohJKYTuhdRoT9sDqPTjBkzcr+/9u3ba6/96KOP0oGjwGc1OPDB/hK6XTD9nSFLhfhqXnFUFL7zp4NNQt4yVhLDyZGiqJMu/6EUU2YcnkeeqyoAVm7oFFWLgg7sgo2qgzKV+kTmGPZe0ym4s44tSGZBemHYvnNoUdFH95f7IJNMVxoVwk5Kca9t2sm+b9++ub6DYAWfoLp27UoHjiK4ATe6DmH/1lRqCkLeQVob0PohPwHbroYJ2WTIHCtdNGna7gu5uX40JQ5Dhw7VnifqudgA+/zIT6ntUcdWfDolpliDQgZa1DHYrNCkadOm1VsEGQVmodDP073A0vPq1rFh8BO2Y1LSzQjbtm1rPFdeFXZM1T/jhCkrvgXGtq6+krQywZppCL0h3APHRrpg1LGo1og83aiVCwiPIQ6KAY7uPCiXGrZhICZk0jyTsB8EbM/y+SNP2KQ4ecEV78DBRJI4u+IE8bd0jQPWjyFFMM76MexJgR05kehiOp/pU+8Ly3vSPpOOHTsaz2tbUT0IUipNMWystYtzjorvQgQ1aNCgzM6LmmDY5wwtvC4ls1SIHiBOG1axHBtpw8ZgrV2dssjnNS2n8oVuj02B6iuvvNJ4bkSE4k64VLwDB0f6KK+f5hyIAFRXV3thNvRV4wo5uIheRC1RwmbfYRUjfWGrL0xyZPVsTJM3vtBvv+eee7QhRxNYFYKuWpiCddfowBGg0mJQKFKH2l66FgATAWghsf0pinSgLphuW6q4QncCCd14CcOHD/d+AGjZUH4fSTemBZk6IW/Z32M4S0z7xpUKSfIYFyALDn1vrF7GDB5yLxASnDx5cqzuE36sSeyreAfGQCEYRgvql19+8Tafnjt3rhfML6ry3uYLK5XzFjZprKqqSmxbxQ/iQKdOnTxnzVKmCYEshcIr2Nu4HM8Iffq87gkRGXTD0thFB14NugdRfT6TkJ+ASQzk4gYLOiMejNZLt1w9rRChGDJkiFgWHKZ8x48fn8m91NTURM600YETgpF1jx49vOlk9EtRaQb9N79QCGKkaDFQehUDt2DJ0TAQH8bIG3020xIfnfBvsfoDuQxYJS38YtaA3A9EO+CEcdM58eNDnxoziUlqP4RR8X1gKfDJRBI3WjSMzDEJgpmu/v37e8vgMQjKY1OUvMB0MO5HtzcdfrxpuwhrKeIGEGKDuAGE2CBuACE2iBtAiA3iBhBig7gBhNggbgAhNogbQIgN4gYQYoO4AYTYIG4AITaIG0CIDeIGEGKDuAGE2CBuACE2iBtAiA3iBhBig7gBhNggbgAhNogbQIgN4gYQYoO4AYTYIG4AITaIG0CIDeIGEGKDuAGE2CBuACE2iBtAiA3iBhBig7gBhNggbgAhNogbQIgN4gYQYoO4AYTYIG4AITaIG0CIDeIGEGKDuAGE2CBuACE2OMsKYAQhaYDvOvMKYAghaZjt4tQVwBBC0lDr4owsgCGEpAG+6/QqgCGEpAG+6zRz+bsAxhCSBPhsU2e1agtgECFJ8Pq/vqoLYBAhSYDP1lNdAYwiJA51jkbdCmAYIXHo5hhUVwDjCAmjzgkRRnVzCmAkITrmOoHIg0ltXBYWwFhCgixyae3EVEeXlQUwmhCw3KWDk1Dw9pkFMJ5UNrNcWjkp1chlTAFuglQmY51VPmitzi7TC3BDpDKAr8HnMldPl3EOk+BJ9sCn4FvwsbKoi8tAl1Eu01yWZHxDZN0FvgKfge/Ah+BLqfR/7MLvW6laWWYAAAAASUVORK5CYII=" alt="GSI logo" class="logo-image">
+        <span class="logo-text">Xპერიმენტი</span>
+    </div>
+    <h1>მცენარის სუნთქვის და ფოთლის სტრუქტურის ინტერაქტიული სიმულაცია</h1>
+    
+    <div class="container">
+        <div class="controls">
+            <h2>გარემო კონტროლი</h2>
+            
+            <div class="control-group">
+                <label for="time">
+                    <i class="fas fa-clock"></i> დღის დრო
+                </label>
+                <input type="range" id="time" min="0" max="24" step="0.5" value="12">
+                <div class="value-display">
+                    <span>00:00</span>
+                    <span id="time-value">12:00</span>
+                    <span>24:00</span>
+                </div>
+                <!-- Light Intensity Indicator based on Time -->
+                <div class="effective-light">
+                    <div class="effective-light-label">
+                        <i class="fas fa-sun"></i> სინათლის ინტენსივობა: <span id="light-value">70%</span>
+                    </div>
+                    <div class="light-indicator-container">
+                        <div id="effective-light-indicator" style="width: 70%;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label for="co2">
+                    <i class="fas fa-atom"></i> CO₂ კონცენტრაცია
+                </label>
+                <input type="range" id="co2" min="0" max="100" value="40">
+                <div class="value-display">
+                    <span>დაბალი</span>
+                    <span id="co2-value">40%</span>
+                    <span>მაღალი</span>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label for="temp">
+                    <i class="fas fa-thermometer-half"></i> ტემპერატურა
+                </label>
+                <input type="range" id="temp" min="0" max="40" value="25">
+                <div class="value-display">
+                    <span>0°C</span>
+                    <span id="temp-value">25°C</span>
+                    <span>40°C</span>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label for="humidity">
+                    <i class="fas fa-tint"></i> ტენიანობა
+                </label>
+                <input type="range" id="humidity" min="0" max="100" value="60">
+                <div class="value-display">
+                    <span>მშრალი</span>
+                    <span id="humidity-value">60%</span>
+                    <span>ტენიანი</span>
+                </div>
+            </div>
+            
+            <h3>სცენარები</h3>
+            <div class="preset-buttons">
+                <button id="optimal" class="preset-button" style="background-color: #3498db;">ოპტიმალური</button>
+                <button id="drought" class="preset-button" style="background-color: #e67e22;">გვალვა</button>
+                <button id="night" class="preset-button" style="background-color: #2c3e50;">ღამე</button>
+                <button id="cloudy" class="preset-button" style="background-color: #95a5a6;">ღრუბლიანი</button>
+            </div>
+        </div>
+        
+        <div class="simulation">
+            <div class="view-toggle">
+                <button id="microscope-view" class="active">ფოლდსკოპის ხედი</button>
+                <button id="cross-section-view">განივი ჭრილის ხედი</button>
+            </div>
+            
+            <!-- Add particle toggle buttons -->
+            <div class="view-toggle" id="particle-toggle-container" style="margin-top: 10px; display: none;">
+                <button id="toggle-co2" class="particle-button active">CO₂</button>
+                <button id="toggle-o2" class="particle-button active">O₂</button>
+                <button id="toggle-h2o" class="particle-button active">H₂O</button>
+                <button id="toggle-all" class="particle-button">ყველა ნაწილაკი</button>
+            </div>
+            
+            <div id="canvas-container">
+                <canvas id="canvas" height="400"></canvas>
+                <div id="microscope-overlay"></div>
+                <div class="scale-indicator">25 მკმ</div>
+                <div id="scale-bar-container">
+                    <div id="scale-bar"></div>
+                    <span>25 მკმ</span>
+                </div>
+            </div>
+            
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-name">ბაგეების გახსნა</div>
+                    <div class="metric-value" id="aperture-value">70%</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-name">ფოტოსინთეზის სიჩქარე</div>
+                    <div class="metric-value" id="photosynthesis-value">65%</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-name">წყლის დანაკარგი</div>
+                    <div class="metric-value" id="water-value">55%</div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Offscreen canvas for static elements in cross-section view
+        let staticCanvas = document.createElement('canvas');
+        let staticCtx = staticCanvas.getContext('2d');
+        let isStaticCanvasInitialized = false;
+        
+        // Store stomata positions for cross-section view to maintain consistency
+        let stomataPositionsForCrossSection = [];
+        
+        const microscopeViewBtn = document.getElementById('microscope-view');
+        const crossSectionViewBtn = document.getElementById('cross-section-view');
+        let currentView = 'microscope';
+        
+        // Configure canvas
+        canvas.width = canvas.offsetWidth;
+        window.addEventListener('resize', () => {
+            canvas.width = canvas.offsetWidth;
+            // Force redrawing of static elements
+            isStaticCanvasInitialized = false;
+            drawScene();
+        });
+        
+        // Environmental controls
+        // Remove light slider reference
+        const co2Slider = document.getElementById('co2');
+        const tempSlider = document.getElementById('temp');
+        const humiditySlider = document.getElementById('humidity');
+        const timeSlider = document.getElementById('time');
+        
+        // Value displays
+        const lightValue = document.getElementById('light-value');
+        const co2Value = document.getElementById('co2-value');
+        const tempValue = document.getElementById('temp-value');
+        const humidityValue = document.getElementById('humidity-value');
+        const timeValue = document.getElementById('time-value');
+        
+        // Light indicator elements
+        const effectiveLightIndicator = document.getElementById('effective-light-indicator');
+        
+        // Metric displays
+        const apertureValue = document.getElementById('aperture-value');
+        const photosynthesisValue = document.getElementById('photosynthesis-value');
+        const waterValue = document.getElementById('water-value');
+
+        
+        // Preset buttons
+        const optimalButton = document.getElementById('optimal');
+        const droughtButton = document.getElementById('drought');
+        const nightButton = document.getElementById('night');
+        const cloudyButton = document.getElementById('cloudy');
+        
+        // Simulation state
+        let environmentFactors = {
+            lightIntensity: 70, // This will be calculated based on timeOfDay
+            co2Concentration: 40,
+            temperature: 25,
+            humidity: 60,
+            timeOfDay: 12
+        };
+        
+        let simulationData = {
+            stomatalAperture: 70,
+            photosynthesisRate: 65,
+            waterLoss: 55
+        };
+        
+        // Particle visibility settings
+        let particleVisibility = {
+            co2: true,
+            o2: true,
+            h2o: true,
+            all: false // Set all to false by default
+        };
+        
+        // Constants for leaf boundaries - These will be updated dynamically
+        let LOWER_EPIDERMIS_Y = 200;
+        let UPPER_EPIDERMIS_Y = 150;
+        const EPIDERMIS_THICKNESS = 10;
+        const MAX_PARTICLE_SPEED = 5;
+        
+        // Helper function to update All button state based on individual gas toggle states
+        function updateAllButtonState() {
+            const allVisible = particleVisibility.co2 && particleVisibility.o2 && particleVisibility.h2o;
+            particleVisibility.all = allVisible;
+            const toggleAllBtn = document.getElementById('toggle-all');
+            toggleAllBtn.classList.toggle('active', allVisible);
+        }
+        
+        // Gas particles
+        let particles = {
+            co2: [],
+            o2: [],
+            h2o: []
+        };
+        
+        // Generate multiple stomata positions
+        // This will create realistic distribution of stomata across the leaf
+        const generateStomataPositions = (canvasWidth, canvasHeight) => {
+            // Fixed scale: 25μm in our simulation will always be this many pixels
+            // This makes stomata size consistent regardless of window size
+            const pixelsPer25um = 90; // Fixed scale: 25μm = 90px
+            const scaleFactor = pixelsPer25um / 25; // Pixels per μm
+            
+            const stomataPositions = [];
+            
+            // Typical stomata are about 25-30μm in length
+            // So they should be roughly 90-110 pixels regardless of canvas size
+            
+            // Define the visible area (excluding margins)
+            const viewArea = {
+                left: canvasWidth * 0.05,
+                top: canvasHeight * 0.05,
+                right: canvasWidth * 0.95,
+                bottom: canvasHeight * 0.95
+            };
+            
+            // Size stomata based on fixed scale (25-30μm = about 90-110px)
+            const stomataSize = 28 * scaleFactor; // 28μm stomata = ~100px
+            const minDistance = stomataSize * 1.5; // Spacing between stomata
+            
+            // Target number of stomata
+            const targetCount = 12;
+            
+            // Use a grid approach for more realistic distribution
+            const gridSize = Math.ceil(Math.sqrt(targetCount * 1.5)); // Larger grid
+            const cellWidth = (viewArea.right - viewArea.left) / gridSize;
+            const cellHeight = (viewArea.bottom - viewArea.top) / gridSize;
+            
+            // Generate random seed for consistent positions
+            const seed = 12345;
+            
+            // Simple pseudo-random function with seed
+            const random = (seed) => {
+                const x = Math.sin(seed++) * 10000;
+                return x - Math.floor(x);
+            };
+            
+            // FIXED ANGLE - all stomata will have the same orientation
+            // Use horizontal orientation (0 degrees) for all stomata
+            const fixedAngle = 0; // 0 radians = horizontal orientation
+            
+            // Add stomata in a fixed pattern
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    // Skip fewer cells to ensure more stomata are visible
+                    const skipSeed = i * 100 + j;
+                    if (random(skipSeed) < 0.2) continue;
+                    
+                    // Use fixed random values derived from position for consistency
+                    const xSeed = i * 1000 + j;
+                    const ySeed = j * 1000 + i;
+                    const sizeSeed = i + j * 10;
+                    
+                    const x = viewArea.left + cellWidth * (i + 0.2 + random(xSeed) * 0.6);
+                    const y = viewArea.top + cellHeight * (j + 0.2 + random(ySeed) * 0.6);
+                    
+                    // Check minimum distance to existing stomata
+                    let tooClose = false;
+                    for (const existing of stomataPositions) {
+                        const dx = existing.x - x;
+                        const dy = existing.y - y;
+                        const distance = Math.sqrt(dx*dx + dy*dy);
+                        if (distance < minDistance) {
+                            tooClose = true;
+                            break;
+                        }
+                    }
+                    
+                    // Only add if not too close to existing stomata
+                    if (!tooClose) {
+                        stomataPositions.push({
+                            x: x,
+                            y: y,
+                            angle: fixedAngle, // Use the same angle for all stomata
+                            size: stomataSize * (0.9 + random(sizeSeed) * 0.2), // Slight size variation
+                            // Fixed random values for chloroplasts to prevent wobbling
+                            chloroplastOffsets: Array.from({ length: 12 }, (_, i) => ({
+                                x: (random(i * 10 + xSeed) - 0.5) * 6,
+                                y: (random(i * 10 + ySeed) - 0.5) * 6
+                            }))
+                        });
+                    }
+                    
+                    // If we have enough stomata, stop adding more
+                    if (stomataPositions.length >= targetCount) {
+                        break;
+                    }
+                }
+                
+                // If we have enough stomata, stop adding more
+                if (stomataPositions.length >= targetCount) {
+                    break;
+                }
+            }
+            
+            // Ensure we have a minimum number of stomata (at least 4-5 visible)
+            if (stomataPositions.length < 5) {
+                const reducedMinDistance = minDistance * 0.7;
+                
+                // Try again with reduced spacing
+                for (let i = 0; i < gridSize; i++) {
+                    for (let j = 0; j < gridSize; j++) {
+                        if (stomataPositions.length >= 5) break;
+                        
+                        const skipSeed = i * 100 + j + 500; // Different seed
+                        if (random(skipSeed) < 0.3) continue;
+                        
+                        const xSeed = i * 1000 + j + 500;
+                        const ySeed = j * 1000 + i + 500;
+                        const sizeSeed = i + j * 10 + 500;
+                        
+                        const x = viewArea.left + cellWidth * (i + 0.3 + random(xSeed) * 0.4);
+                        const y = viewArea.top + cellHeight * (j + 0.3 + random(ySeed) * 0.4);
+                        
+                        // Check with reduced minimum distance
+                        let tooClose = false;
+                        for (const existing of stomataPositions) {
+                            const dx = existing.x - x;
+                            const dy = existing.y - y;
+                            const distance = Math.sqrt(dx*dx + dy*dy);
+                            if (distance < reducedMinDistance) {
+                                tooClose = true;
+                                break;
+                            }
+                        }
+                        
+                        if (!tooClose) {
+                            stomataPositions.push({
+                                x: x,
+                                y: y,
+                                angle: fixedAngle,
+                                size: stomataSize * (0.85 + random(sizeSeed) * 0.3),
+                                chloroplastOffsets: Array.from({ length: 12 }, (_, i) => ({
+                                    x: (random(i * 10 + xSeed) - 0.5) * 6,
+                                    y: (random(i * 10 + ySeed) - 0.5) * 6
+                                }))
+                            });
+                        }
+                    }
+                    
+                    if (stomataPositions.length >= 5) break;
+                }
+            }
+            
+            return stomataPositions;
+        };
+        
+        // Stomata positions - will be initialized later
+        let stomataPositions = [];
+        
+        // Texture patterns
+        let cellTexturePattern = null;
+        let epidermalCellPattern = null;
+        
+        // Create textures
+        function createTextures() {
+            // Guard cell texture
+            const cellTextureCanvas = document.createElement('canvas');
+            cellTextureCanvas.width = 50;
+            cellTextureCanvas.height = 50;
+            const cellTextureCtx = cellTextureCanvas.getContext('2d');
+            
+            // Base bright green color from the reference images
+            cellTextureCtx.fillStyle = '#91de65';
+            cellTextureCtx.fillRect(0, 0, 50, 50);
+            
+            // Add granular texture to represent chloroplasts
+            for (let i = 0; i < 400; i++) {
+                const x = Math.random() * 50;
+                const y = Math.random() * 50;
+                const size = Math.random() * 1.5 + 0.5;
+                
+                // Alternate between darker and lighter green dots
+                cellTextureCtx.fillStyle = Math.random() > 0.7 ? 
+                    'rgba(50, 120, 50, 0.2)' : 'rgba(180, 255, 180, 0.2)';
+                
+                cellTextureCtx.beginPath();
+                cellTextureCtx.arc(x, y, size, 0, Math.PI * 2);
+                cellTextureCtx.fill();
+            }
+            
+            cellTexturePattern = ctx.createPattern(cellTextureCanvas, 'repeat');
+            
+            // Epidermal cell texture - now more translucent
+            const epidermalTextureCanvas = document.createElement('canvas');
+            epidermalTextureCanvas.width = 60;
+            epidermalTextureCanvas.height = 60;
+            const epidermalTextureCtx = epidermalTextureCanvas.getContext('2d');
+            
+            epidermalTextureCtx.fillStyle = 'rgba(200, 230, 190, 0.4)'; // Translucent green base
+            epidermalTextureCtx.fillRect(0, 0, 60, 60);
+            
+            // Add cellular texture
+            for (let i = 0; i < 200; i++) {
+                const x = Math.random() * 60;
+                const y = Math.random() * 60;
+                const size = Math.random() * 2 + 0.5;
+                
+                epidermalTextureCtx.fillStyle = Math.random() > 0.7 ? 
+                    'rgba(100, 160, 80, 0.15)' : 'rgba(180, 230, 160, 0.1)';
+                epidermalTextureCtx.beginPath();
+                epidermalTextureCtx.arc(x, y, size, 0, Math.PI * 2);
+                epidermalTextureCtx.fill();
+            }
+            
+            epidermalCellPattern = ctx.createPattern(epidermalTextureCanvas, 'repeat');
+        }
+        
+        // Initialize particles
+        function initParticles() {
+            // CO2 particles (outside leaf, below)
+            for (let i = 0; i < 8; i++) {
+                particles.co2.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height - Math.random() * 150, // Position below the leaf
+                    radius: 5,
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: -Math.random() * 1.5, // Upward trajectory
+                    type: 'co2',
+                    stuckCounter: 0,
+                    lastPosition: { x: 0, y: 0 }
+                });
+            }
+            
+            // O2 particles (inside leaf)
+            for (let i = 0; i < 6; i++) {
+                particles.o2.push({
+                    x: canvas.width / 2 + (Math.random() - 0.5) * 300,
+                    y: 250 + Math.random() * 100,
+                    radius: 5,
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: Math.random() * -1.5,
+                    type: 'o2'
+                });
+            }
+            
+            // H2O particles (inside leaf)
+            for (let i = 0; i < 8; i++) {
+                particles.h2o.push({
+                    x: canvas.width / 2 + (Math.random() - 0.5) * 300,
+                    y: 250 + Math.random() * 100,
+                    radius: 5,
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: Math.random() * -1.8,
+                    type: 'h2o'
+                });
+            }
+        }
+        
+        // Update particles based on current view
+        function updateParticles() {
+            // Only update particles in cross-section view
+            if (currentView !== 'cross-section') {
+                return;
+            }
+            
+            const scaleFactor = canvas.width / 500; // Scale based on canvas width
+            const apertureFactor = simulationData.stomatalAperture / 100;
+            
+            // Pre-calculate stomata positions once for all particles
+            const stomataPositions = [
+                {
+                    x: canvas.width * 0.32,
+                    y: LOWER_EPIDERMIS_Y,
+                    width: apertureFactor * 50 * scaleFactor,
+                    height: 50 * scaleFactor
+                },
+                {
+                    x: canvas.width * 0.72,
+                    y: LOWER_EPIDERMIS_Y,
+                    width: apertureFactor * 50 * scaleFactor,
+                    height: 50 * scaleFactor
+                }
+            ];
+            
+            // Common boundary checking function to reduce code duplication
+            const isAlignedWithStomata = (particle) => {
+                // If stomata are completely closed, no alignment is possible
+                if (apertureFactor < 0.05) return false;
+                
+                for (const stomata of stomataPositions) {
+                    if (Math.abs(particle.x - stomata.x) < stomata.width / 2 && 
+                        Math.abs(particle.y - stomata.y) < EPIDERMIS_THICKNESS * 2 && 
+                        apertureFactor > 0.1) { // Reduced threshold from 0.2 to 0.1
+                        return true;
+                    }
+                }
+                return false;
+            };
+            
+            // Common function to find closest stomata
+            const findClosestStomata = (particle) => {
+                let closestStomata = null;
+                let minDist = Infinity;
+                
+                for (const stomata of stomataPositions) {
+                    const dx = stomata.x - particle.x;
+                    const dy = stomata.y - particle.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < minDist) {
+                        closestStomata = stomata;
+                        minDist = dist;
+                    }
+                }
+                
+                return { stomata: closestStomata, distance: minDist };
+            };
+            
+            // Common function to handle boundary crossing
+            const handleBoundaryCrossing = (particle, prevY, nextY, isLowerEpidermis, basePassProbability) => {
+                const epidermisY = isLowerEpidermis ? LOWER_EPIDERMIS_Y : UPPER_EPIDERMIS_Y;
+                const halfThickness = EPIDERMIS_THICKNESS / 2;
+                
+                // Determine if attempting to enter or exit the leaf
+                const tryingToEnterLeaf = (isLowerEpidermis && prevY > epidermisY) || 
+                                        (!isLowerEpidermis && prevY < epidermisY);
+                
+                // Check alignment with stomata for lower epidermis
+                const alignedWithStoma = isLowerEpidermis ? isAlignedWithStomata(particle) : false;
+                
+                // Adjust probability based on environmental factors
+                let adjustedProbability = basePassProbability;
+                
+                // Light and time factors for all calculations
+                const lightIntensity = environmentFactors.lightIntensity / 100;
+                const isNighttime = environmentFactors.timeOfDay < 6 || environmentFactors.timeOfDay > 18;
+                const lightFactor = isNighttime ? 0.2 : lightIntensity;
+                
+                // For CO2 (entering through lower epidermis)
+                if (particle.type === 'co2' && isLowerEpidermis && tryingToEnterLeaf) {
+                    // CO2 more likely to enter during daytime (photosynthesis)
+                    adjustedProbability = basePassProbability * (isNighttime ? 0.3 : (0.7 + lightFactor * 0.5));
+                }
+                
+                // For CO2 (exiting through lower epidermis)
+                if (particle.type === 'co2' && isLowerEpidermis && !tryingToEnterLeaf) {
+                    // CO2 has higher probability of exiting at night, and even when stomata are more closed
+                    if (isNighttime) {
+                        // At night, CO2 has a higher chance to exit even through more closed stomata
+                        // This simulates CO2 buildup in the leaf needing to escape during respiration
+                        adjustedProbability = 0.7;
+                        
+                        // Give CO2 a small chance to exit even if not aligned with stomata
+                        if (!alignedWithStoma && Math.random() < 0.15) {
+                            return {
+                                ...particle,
+                                y: nextY,
+                                speedX: particle.speedX * 0.8,
+                                speedY: particle.speedY * 0.8
+                            };
+                        }
+                    } else {
+                        // During day, CO2 is consumed for photosynthesis, so less likely to exit
+                        adjustedProbability = 0.4 + (1 - lightFactor) * 0.3; // Higher exit probability when light is lower
+                    }
+                }
+                
+                // For CO2 (exiting through upper epidermis)
+                if (particle.type === 'co2' && !isLowerEpidermis && !tryingToEnterLeaf) {
+                    // CO2 can exit through upper epidermis with lower probability
+                    // Higher at night than during day
+                    adjustedProbability = isNighttime ? 0.4 : 0.2;
+                }
+                
+                // For O2 (exiting through lower epidermis)
+                if (particle.type === 'o2' && isLowerEpidermis && !tryingToEnterLeaf) {
+                    // O2 more likely to exit during daytime (photosynthesis byproduct)
+                    const isDaytime = environmentFactors.timeOfDay >= 7 && environmentFactors.timeOfDay <= 19;
+                    const lightFactor = environmentFactors.lightIntensity / 100;
+                    adjustedProbability = basePassProbability * (isDaytime ? (0.7 + lightFactor * 0.5) : 0.3);
+                }
+                
+                // For H2O (exiting through lower epidermis - transpiration)
+                if (particle.type === 'h2o' && isLowerEpidermis && !tryingToEnterLeaf) {
+                    // H2O more likely to exit in hot/dry conditions and during daytime
+                    const tempFactor = environmentFactors.temperature / 40;
+                    const humidityFactor = 1 - (environmentFactors.humidity / 100);
+                    const lightFactor = environmentFactors.lightIntensity / 100;
+                    adjustedProbability = basePassProbability * (0.5 + (tempFactor * 0.3 + humidityFactor * 0.3 + lightFactor * 0.2));
+                }
+                
+                // Increase chance to pass through stomata when aligned
+                if (alignedWithStoma && Math.random() < adjustedProbability) {
+                    return {
+                        ...particle,
+                        y: nextY,
+                        speedX: particle.speedX * (0.8 + Math.random() * 0.4),
+                        speedY: particle.speedY * (0.8 + Math.random() * 0.4)
+                    };
+                } 
+                
+                // Very rare chance to pass through epidermis anyway (fixed at 0.0001)
+                if (Math.random() < 0.0001) {
+                    return {
+                        ...particle,
+                        y: nextY,
+                        speedX: particle.speedX * 0.1,
+                        speedY: particle.speedY * 0.1
+                    };
+                }
+                
+                // Otherwise, bounce off the epidermis
+                return {
+                    ...particle,
+                    y: tryingToEnterLeaf ? 
+                        (isLowerEpidermis ? epidermisY + halfThickness : epidermisY - halfThickness) : 
+                        (isLowerEpidermis ? epidermisY - halfThickness : epidermisY + halfThickness),
+                    speedY: particle.speedY * -0.8 // Lose some energy but not too much
+                };
+            };
+            
+            // Only update CO2 particles if they are visible
+            if (particleVisibility.co2) {
+                // Update CO2 particles
+                particles.co2 = particles.co2.map(particle => {
+                    // Store previous position
+                    const prevY = particle.y;
+                    
+                    // Limit maximum speed
+                    particle.speedX = Math.max(-MAX_PARTICLE_SPEED, Math.min(MAX_PARTICLE_SPEED, particle.speedX));
+                    particle.speedY = Math.max(-MAX_PARTICLE_SPEED, Math.min(MAX_PARTICLE_SPEED, particle.speedY));
+                    
+                    // Calculate next position
+                    const nextY = particle.y + particle.speedY;
+                    
+                    // Default movement
+                    particle.x += particle.speedX;
+                    
+                    if (currentView === 'microscope' && apertureFactor > 0.2) {
+                        // Microscope view logic (unchanged)
+                        // ...
+                    } else if (currentView === 'cross-section') {
+                        // Cross-section view - handle stomata and epidermis interactions
+                        
+                        // Find closest stomata
+                        const { stomata, distance } = findClosestStomata(particle);
+                        
+                        // Attract CO2 to stomata when within range and stomata are open
+                        if (distance < 150 && apertureFactor > 0.2) {
+                            particle.x += (stomata.x - particle.x) * 0.025;
+                        }
+                        
+                        // Handle lower epidermis crossing (CO2 entering the leaf)
+                        if (prevY > LOWER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2 && 
+                            nextY <= LOWER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2) {
+                            return handleBoundaryCrossing(particle, prevY, nextY, true, 0.99);
+                        }
+                        
+                        // Handle CO2 trying to exit through lower epidermis from inside the leaf
+                        if (prevY < LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2 && 
+                            nextY >= LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2) {
+                            return handleBoundaryCrossing(particle, prevY, nextY, true, 0.7);
+                        }
+                        
+                        // Handle upper epidermis crossing
+                        if (prevY < UPPER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2 && 
+                            nextY >= UPPER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2) {
+                            return handleBoundaryCrossing(particle, prevY, nextY, false, 0.0001);
+                        }
+                        
+                        // Handle CO2 trying to exit through upper epidermis from inside the leaf
+                        if (prevY > UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2 && 
+                            nextY <= UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2) {
+                            return handleBoundaryCrossing(particle, prevY, nextY, false, 0.3);
+                        }
+                        
+                        // Check if CO2 particle is in the palisade mesophyll layer for photosynthesis
+                        const palisadeStartY = UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS;
+                        const palisadeHeight = (LOWER_EPIDERMIS_Y - UPPER_EPIDERMIS_Y - 2 * EPIDERMIS_THICKNESS) * 0.4; // 40% of leaf thickness
+                        
+                        // Only process photosynthesis in the palisade layer when there is light
+                        if (particle.type === 'co2' && 
+                            particle.y >= palisadeStartY && 
+                            particle.y <= palisadeStartY + palisadeHeight) {
+                            
+                            // Light-dependent photosynthesis: higher probability during higher light intensity
+                            const lightIntensity = environmentFactors.lightIntensity / 100;
+                            const photosynthesisProb = 0.01 + (lightIntensity * 0.05); // 1-6% probability based on light
+                            
+                            // CO2 has a chance to be consumed in photosynthesis
+                            if (lightIntensity > 0.1 && Math.random() < photosynthesisProb) {
+                                // This CO2 will be consumed (despawned)
+                                
+                                // Generate oxygen as a product of photosynthesis (with 80% probability)
+                                if (Math.random() < 0.8) {
+                                    // Create a new O2 particle at the position where CO2 was consumed
+                                    particles.o2.push({
+                                        x: particle.x + (Math.random() - 0.5) * 20, // Slight position variation
+                                        y: particle.y + (Math.random() - 0.5) * 20, // Slight position variation
+                                        radius: 5,
+                                        speedX: (Math.random() - 0.5) * 2,
+                                        speedY: (Math.random() - 0.5) * 2 - 0.5, // Slight upward bias
+                                        type: 'o2'
+                                    });
+                                }
+                                
+                                // Instead of removing the CO2 particle, respawn it at the bottom of the leaf
+                                return {
+                                    x: canvas.width * Math.random(),
+                                    y: canvas.height - Math.random() * 80, // Position below the leaf
+                                    radius: 5,
+                                    speedX: (Math.random() - 0.5) * 2.5,
+                                    speedY: -Math.random() * 2.5, // Upward trajectory
+                                    type: 'co2',
+                                    stuckCounter: 0,
+                                    lastPosition: { x: 0, y: 0 }
+                                };
+                            }
+                        }
+                    }
+                    
+                    // Bounce off canvas edges
+                    if (particle.x < 0 || particle.x > canvas.width) {
+                        particle.speedX *= -1;
+                        particle.x = particle.x < 0 ? 0 : canvas.width;
+                    }
+                    if (particle.y < 0) {
+                        particle.y = 0;
+                        particle.speedY *= -1;
+                    }
+                    if (particle.y > canvas.height) {
+                        particle.y = canvas.height;
+                        particle.speedY *= -1;
+                    }
+                    
+                    // Reset particles that get too far out of bounds
+                    if (particle.y < -50 || particle.y > canvas.height + 50 || 
+                        particle.x < -50 || particle.x > canvas.width + 50) {
+                        return resetParticle(particle.type);
+                    }
+                    
+                    // Detect and reset particles that are stuck (very low movement over time)
+                    if (particle.stuckCounter === undefined) {
+                        particle.stuckCounter = 0;
+                        particle.lastPosition = { x: particle.x, y: particle.y };
+                    }
+                    
+                    // Check if particle has moved significantly
+                    const distanceMoved = Math.sqrt(
+                        Math.pow(particle.x - particle.lastPosition.x, 2) + 
+                        Math.pow(particle.y - particle.lastPosition.y, 2)
+                    );
+                    
+                    if (distanceMoved < 1) {
+                        particle.stuckCounter++;
+                        
+                        // If particle hasn't moved for several frames, give it a boost or reset it
+                        if (particle.stuckCounter > 20) {
+                            if (Math.random() < 0.7) {
+                                // Give it a strong random impulse to escape
+                                particle.speedX = (Math.random() - 0.5) * 4;
+                                particle.speedY = (Math.random() - 0.5) * 4;
+                                particle.stuckCounter = 0;
+                            } else {
+                                // Sometimes just reset the particle completely
+                                return resetParticle(particle.type);
+                            }
+                        }
+                    } else {
+                        // Particle is moving normally, reset counter
+                        particle.stuckCounter = 0;
+                        particle.lastPosition = { x: particle.x, y: particle.y };
+                    }
+                    
+                    // Continue with normal movement if not crossing any boundaries
+                    if (currentView === 'cross-section') {
+                        particle.y += particle.speedY;
+                    }
+                    
+                    return particle;
+                });
+            }
+            
+            // Only update O2 particles if they are visible
+            if (particleVisibility.o2) {
+                // Update O2 particles - properly implemented now
+                particles.o2 = particles.o2.map(particle => {
+                    // Store previous position
+                    const prevY = particle.y;
+                    
+                    // Limit maximum speed
+                    particle.speedX = Math.max(-MAX_PARTICLE_SPEED, Math.min(MAX_PARTICLE_SPEED, particle.speedX));
+                    particle.speedY = Math.max(-MAX_PARTICLE_SPEED, Math.min(MAX_PARTICLE_SPEED, particle.speedY));
+                    
+                    // Calculate next position
+                    const nextY = particle.y + particle.speedY;
+                    
+                    // Default movement
+                    particle.x += particle.speedX;
+                    
+                    if (currentView === 'cross-section') {
+                        // Find closest stomata
+                        const { stomata, distance } = findClosestStomata(particle);
+                        
+                        // During daytime, O2 has a stronger attraction to stomata to exit the leaf
+                        const isDaytime = environmentFactors.timeOfDay >= 6 && environmentFactors.timeOfDay <= 18;
+                        if (isDaytime && particle.y < LOWER_EPIDERMIS_Y) {
+                            // Stronger attraction during day with higher light intensity
+                            const lightFactor = environmentFactors.lightIntensity / 100;
+                            const attractionStrength = 0.025 + (lightFactor * 0.03); // 0.025-0.055 range based on light
+                            
+                            // Stronger attraction when closer to stomata
+                            const attractionRadius = 200; // Wider attraction radius for O2
+                            if (distance < attractionRadius) {
+                                // Stronger attraction when closer to stomata
+                                const proximityFactor = 1 - (distance / attractionRadius);
+                                particle.x += (stomata.x - particle.x) * attractionStrength * proximityFactor;
+                                
+                                // Add a slight downward bias toward the stomata
+                                if (particle.y < stomata.y) {
+                                    particle.y += 0.2 * proximityFactor * lightFactor;
+                                    // Additional small chance to push downward more strongly
+                                    if (Math.random() < 0.1 * lightFactor) {
+                                        particle.speedY += 0.1 * lightFactor;
+                                    }
+                                }
+                            }
+                        } 
+                        // Regular attraction to stomata (weaker, for all conditions)
+                        else if (distance < 150 && apertureFactor > 0.2) {
+                            particle.x += (stomata.x - particle.x) * 0.025;
+                        }
+                        
+                        // O2 is primarily exiting the leaf (from inside to outside)
+                        // Check if O2 is inside the leaf and trying to exit through lower epidermis
+                        if (prevY < LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2 && 
+                            nextY >= LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2) {
+                            // Increase the exit probability during daytime
+                            const exitProb = isDaytime ? 
+                                0.99 + (0.01 * environmentFactors.lightIntensity / 100) : // Up to 1.0 during bright daylight
+                                0.85; // Lower at night
+                            return handleBoundaryCrossing(particle, prevY, nextY, true, exitProb);
+                        }
+                        
+                        // Check if O2 is outside the leaf and trying to enter through lower epidermis
+                        if (prevY > LOWER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2 && 
+                            nextY <= LOWER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2) {
+                            // Increase the entry probability during nighttime for O2
+                            const isNighttime = environmentFactors.timeOfDay < 6 || environmentFactors.timeOfDay > 18;
+                            const entryProb = isNighttime ? 
+                                0.7 + (0.1 * (1 - environmentFactors.lightIntensity / 100)) : // Up to 0.8 during complete darkness
+                                0.3; // Lower during day
+                            return handleBoundaryCrossing(particle, prevY, nextY, true, entryProb);
+                        }
+                        
+                        // Check if O2 is trying to cross the upper epidermis from below
+                        if (prevY > UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2 && 
+                            nextY <= UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2) {
+                            return handleBoundaryCrossing(particle, prevY, nextY, false, 0.0001);
+                        }
+                        
+                        // Check if O2 is trying to cross the upper epidermis from above
+                        if (prevY < UPPER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2 && 
+                            nextY >= UPPER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2) {
+                            return handleBoundaryCrossing(particle, prevY, nextY, false, 0.5);
+                        }
+                        
+                        // Check if O2 particle is in the mesophyll layer and potentially despawn it (consumption)
+                        // Define both palisade and spongy mesophyll layers
+                        const palisadeStartY = UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS;
+                        const palisadeHeight = (LOWER_EPIDERMIS_Y - UPPER_EPIDERMIS_Y - 2 * EPIDERMIS_THICKNESS) * 0.4; // 40% of leaf thickness
+                        const spongyStartY = palisadeStartY + palisadeHeight;
+                        const spongyHeight = (LOWER_EPIDERMIS_Y - UPPER_EPIDERMIS_Y - 2 * EPIDERMIS_THICKNESS) * 0.6; // 60% of remaining leaf thickness
+                        
+                        // O2 can be consumed in the mesophyll layer, especially at night (cellular respiration)
+                        const isNighttime = environmentFactors.timeOfDay < 6 || environmentFactors.timeOfDay > 18;
+                        
+                        if (particle.y >= palisadeStartY && particle.y <= LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS) {
+                            // Higher consumption during night (cellular respiration)
+                            // Lower consumption during day (when it's being produced)
+                            const lightFactor = environmentFactors.lightIntensity / 100;
+                            
+                            // EXTREME probability increase for nighttime conversion
+                            // Guarantee conversion in mesophyll at night
+                            let consumptionProb = isNighttime ? 
+                                0.25 + (0.15 * (1 - lightFactor)) : // 25-40% probability per frame (guaranteed within a few frames)
+                                0.001; // Keep very low during day
+                                
+                            // Higher in spongy mesophyll where more cellular respiration happens
+                            if (particle.y >= spongyStartY) {
+                                consumptionProb *= 2.0; // Double the probability in spongy mesophyll
+                            }
+                            
+                            // At night, additional boost to conversion near lower epidermis
+                            // This simulates more activity in areas with higher cellular density
+                            if (isNighttime && particle.y > (LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS - 30)) {
+                                consumptionProb *= 1.5; // Additional 50% boost near lower epidermis
+                            }
+                            
+                            // Randomly consume (despawn) O2 based on probability
+                            if (Math.random() < consumptionProb) {
+                                // Respiration - O2 is consumed
+                                
+                                // When O2 is consumed, it transforms into CO2 (cellular respiration)
+                                // O2 + glucose → CO2 + H2O + energy
+                                if (particleVisibility.co2) {
+                            
+                                    // Transform the O2 particle into a CO2 particle at the same position
+                                    return {
+                                        x: particle.x, // Same position
+                                        y: particle.y, // Same position
+                                        radius: 5,
+                                        speedX: (Math.random() - 0.5) * 2,
+                                        speedY: (Math.random() - 0.5) * 2,
+                                        type: 'co2', // Changed from 'o2' to 'co2'
+                                        stuckCounter: 0,
+                                        lastPosition: { x: 0, y: 0 },
+                                        // Mark this as a converted particle for visual indication
+                                        isConverted: true,
+                                        conversionTime: Date.now()
+                                    };
+                                } else {
+                                    // If CO2 particles aren't visible, just remove the O2
+                                    return {
+                                        ...particle,
+                                        x: -50, // Move out of bounds to be filtered out
+                                        y: -50
+                                    };
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Bounce off canvas edges
+                    if (particle.x < 0 || particle.x > canvas.width) {
+                        particle.speedX *= -1;
+                        particle.x = particle.x < 0 ? 0 : canvas.width;
+                    }
+                    if (particle.y < 0) {
+                        particle.y = 0;
+                        particle.speedY *= -1;
+                    }
+                    if (particle.y > canvas.height) {
+                        particle.y = canvas.height;
+                        particle.speedY *= -1;
+                    }
+                    
+                    // Reset particles that get too far out of bounds
+                    if (particle.y < -50 || particle.y > canvas.height + 50 || 
+                        particle.x < -50 || particle.x > canvas.width + 50) {
+                        // Check if it's nighttime first - if so, convert O2 to CO2 by returning a CO2 particle
+                        const isNighttime = environmentFactors.timeOfDay < 6 || environmentFactors.timeOfDay > 18;
+                        if (isNighttime && particleVisibility.co2 && Math.random() < 0.9) {
+                            // Get mesophyll layer position for conversion
+                            const palisadeStartY = UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS;
+                            const palisadeHeight = (LOWER_EPIDERMIS_Y - UPPER_EPIDERMIS_Y - 2 * EPIDERMIS_THICKNESS) * 0.4;
+                            const spongyStartY = palisadeStartY + palisadeHeight;
+
+                            // Higher probability in spongy mesophyll
+                            let yPosition;
+                            if (Math.random() < 0.7) { // 70% in spongy
+                                yPosition = spongyStartY + Math.random() * (LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS - spongyStartY);
+                            } else { // 30% in palisade
+                                yPosition = palisadeStartY + Math.random() * palisadeHeight;
+                            }
+
+                            // Return CO2
+                            return {
+                                x: canvas.width * Math.random(),
+                                y: yPosition,
+                                radius: 5,
+                                speedX: (Math.random() - 0.5) * 2,
+                                speedY: (Math.random() - 0.5) * 2,
+                                type: 'co2',
+                                stuckCounter: 0,
+                                lastPosition: { x: 0, y: 0 }
+                            };
+                        }
+                        // If not night or CO2 not visible, use the normal resetParticle
+                        return resetParticle('o2');
+                    }
+                    
+                    // Detect and reset particles that are stuck (very low movement over time)
+                    if (particle.stuckCounter === undefined) {
+                        particle.stuckCounter = 0;
+                        particle.lastPosition = { x: particle.x, y: particle.y };
+                    }
+                    
+                    // Check if particle has moved significantly
+                    const distanceMoved = Math.sqrt(
+                        Math.pow(particle.x - particle.lastPosition.x, 2) + 
+                        Math.pow(particle.y - particle.lastPosition.y, 2)
+                    );
+                    
+                    if (distanceMoved < 1) {
+                        particle.stuckCounter++;
+                        
+                        // If particle hasn't moved for several frames, give it a boost or reset it
+                        if (particle.stuckCounter > 20) {
+                            if (Math.random() < 0.7) {
+                                // Give it a strong random impulse to escape
+                                particle.speedX = (Math.random() - 0.5) * 4;
+                                particle.speedY = (Math.random() - 0.5) * 4;
+                                particle.stuckCounter = 0;
+                            } else {
+                                // Sometimes just reset the particle completely
+                                // Check if it's nighttime first to possibly convert O2 to CO2
+                                const isNighttime = environmentFactors.timeOfDay < 6 || environmentFactors.timeOfDay > 18;
+                                if (isNighttime && particleVisibility.co2 && Math.random() < 0.9) {
+                                    // Get mesophyll layer position for conversion
+                                    const palisadeStartY = UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS;
+                                    const palisadeHeight = (LOWER_EPIDERMIS_Y - UPPER_EPIDERMIS_Y - 2 * EPIDERMIS_THICKNESS) * 0.4;
+                                    const spongyStartY = palisadeStartY + palisadeHeight;
+                                    
+                                    // Higher probability in spongy mesophyll
+                                    let yPosition;
+                                    if (Math.random() < 0.7) { // 70% in spongy
+                                        yPosition = spongyStartY + Math.random() * (LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS - spongyStartY);
+                                    } else { // 30% in palisade
+                                        yPosition = palisadeStartY + Math.random() * palisadeHeight;
+                                    }
+                                    
+                                    // Return CO2 directly instead of calling resetParticle
+                                    return {
+                                        x: canvas.width * Math.random(),
+                                        y: yPosition,
+                                        radius: 5,
+                                        speedX: (Math.random() - 0.5) * 2,
+                                        speedY: (Math.random() - 0.5) * 2,
+                                        type: 'co2',
+                                        stuckCounter: 0,
+                                        lastPosition: { x: 0, y: 0 }
+                                    };
+                                } else {
+                                    // If not night or not converting, use the normal resetParticle
+                                    return resetParticle('o2');
+                                }
+                            }
+                        }
+                    } else {
+                        // Particle is moving normally, reset counter
+                        particle.stuckCounter = 0;
+                        particle.lastPosition = { x: particle.x, y: particle.y };
+                    }
+                    
+                    // Continue with normal movement if not crossing any boundaries
+                    if (currentView === 'cross-section') {
+                        particle.y += particle.speedY;
+                    }
+                    
+                    return particle;
+                });
+            }
+            
+            // Only update H2O particles if they are visible
+            if (particleVisibility.h2o) {
+                // Update H2O particles - properly implemented now
+                particles.h2o = particles.h2o.map(particle => {
+                    // Store previous position
+                    const prevY = particle.y;
+                    
+                    // Limit maximum speed
+                    particle.speedX = Math.max(-MAX_PARTICLE_SPEED, Math.min(MAX_PARTICLE_SPEED, particle.speedX));
+                    particle.speedY = Math.max(-MAX_PARTICLE_SPEED, Math.min(MAX_PARTICLE_SPEED, particle.speedY));
+                    
+                    // Calculate next position
+                    const nextY = particle.y + particle.speedY;
+                    
+                    // Default movement
+                    particle.x += particle.speedX;
+                    
+                    if (currentView === 'cross-section') {
+                        // Find closest stomata
+                        const { stomata, distance } = findClosestStomata(particle);
+                        
+                        // Define vascular bundle positions for water affinity
+                        const veinCenterX = canvas.width * 0.3; // Match the position in drawStaticLeafElements
+                        const veinCenterY = (UPPER_EPIDERMIS_Y + LOWER_EPIDERMIS_Y) / 2;
+                        const veinWidth = 50 * (canvas.width / 500); // Scale with canvas width
+                        const veinHeight = 36 * (canvas.width / 500);
+                        
+                        // Calculate xylem position (upper part of vein)
+                        const xylemCenterY = veinCenterY - veinHeight * 0.15;
+                        
+                        // Calculate distance to xylem (center of vascular bundle)
+                        const distToXylem = Math.sqrt(
+                            Math.pow(particle.x - veinCenterX, 2) + 
+                            Math.pow(particle.y - xylemCenterY, 2)
+                        );
+                        
+                        // Add attraction to xylem for H2O particles that are inside the leaf
+                        // This simulates water movement through the xylem
+                        if (particle.y > UPPER_EPIDERMIS_Y && particle.y < LOWER_EPIDERMIS_Y) {
+                            // Water is attracted to xylem, especially when it's within range
+                            const xylemAttractionRange = veinWidth * 3; // Increased range
+                            
+                            if (distToXylem < xylemAttractionRange) {
+                                // Stronger attraction when closer to xylem
+                                const attractionFactor = 0.06 * (1 - distToXylem / xylemAttractionRange);
+                                
+                                // Move toward xylem vessels
+                                particle.x += (veinCenterX - particle.x) * attractionFactor;
+                                particle.y += (xylemCenterY - particle.y) * attractionFactor;
+                                
+                                // Add slight upward bias to simulate water column tension
+                                if (Math.random() < 0.3) {
+                                    particle.speedY -= 0.05;
+                                }
+                                
+                                // Water particles in xylem have a chance to move quickly upward
+                                // Simulating transpiration pull through xylem
+                                if (distToXylem < veinWidth/2 && Math.random() < 0.1) {
+                                    particle.speedY = -Math.random() * 3;
+                                }
+                            }
+                        }
+                        
+                        // Attract H2O to stomata when within range and stomata are open
+                        // This simulates transpiration
+                        if (distance < 150 && apertureFactor > 0.2) {
+                            // Calculate environmental factor impact on transpiration
+                            // Higher temperature and lower humidity increase transpiration rate
+                            const tempFactor = Math.min(1.0, environmentFactors.temperature / 40); // 0-1 scale
+                            const humidityFactor = Math.max(0.1, 1 - (environmentFactors.humidity / 100)); // 0.1-1 scale (never zero)
+                            
+                            // Calculate combined environmental effect on transpiration
+                            // Higher values = stronger transpiration pull
+                            const environmentalPull = 0.03 * (1 + tempFactor + humidityFactor);
+                            
+                            // Apply stronger attraction for water near xylem vessels
+                            // This creates a pathway from xylem → mesophyll → stomata
+                            const isNearXylem = distToXylem < veinWidth * 4;
+                            const xylemBoost = isNearXylem ? 1.5 : 1.0;
+                            
+                            // Final attraction calculation - stronger when hot and dry
+                            const attractionX = (stomata.x - particle.x) * environmentalPull * xylemBoost;
+                            const attractionY = (LOWER_EPIDERMIS_Y - particle.y) * environmentalPull * xylemBoost;
+                            
+                            // Add debug visualization of transpiration rate
+                            // console.log(`Temp: ${tempFactor.toFixed(2)}, Humidity: ${humidityFactor.toFixed(2)}, Pull: ${environmentalPull.toFixed(3)}`);
+                            
+                            // Apply the calculated attraction
+                            particle.x += attractionX;
+                            particle.y += attractionY;
+                            
+                            // Increase exit probability when environmental conditions favor transpiration
+                            if (Math.random() < tempFactor * humidityFactor * 0.1 && 
+                                Math.abs(particle.x - stomata.x) < stomata.width/2 &&
+                                Math.abs(particle.y - LOWER_EPIDERMIS_Y) < 30) {
+                                particle.speedY += 0.3 * (tempFactor + humidityFactor);
+                            }
+                        }
+                        
+                        // H2O is primarily exiting the leaf (from inside to outside)
+                        // Check if H2O is inside the leaf and trying to exit through lower epidermis
+                        if (prevY < LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2 && 
+                            nextY >= LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2) {
+                            return handleBoundaryCrossing(particle, prevY, nextY, true, 0.99);
+                        }
+                        
+                        // Check if H2O is outside the leaf and trying to enter through lower epidermis
+                        if (prevY > LOWER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2 && 
+                            nextY <= LOWER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2) {
+                            return handleBoundaryCrossing(particle, prevY, nextY, true, 0.1);
+                        }
+                        
+                        // Check if H2O is trying to cross the upper epidermis from below
+                        if (prevY > UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2 && 
+                            nextY <= UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS/2) {
+                            return handleBoundaryCrossing(particle, prevY, nextY, false, 0.0001);
+                        }
+                        
+                        // Check if H2O is trying to cross the upper epidermis from above
+                        if (prevY < UPPER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2 && 
+                            nextY >= UPPER_EPIDERMIS_Y - EPIDERMIS_THICKNESS/2) {
+                            return handleBoundaryCrossing(particle, prevY, nextY, false, 0.1);
+                        }
+                        
+                        // Add random movement to avoid getting stuck
+                        if (Math.random() < 0.08) {
+                            particle.speedX += (Math.random() - 0.5) * 0.8;
+                            particle.speedY += (Math.random() - 0.5) * 0.8;
+                        }
+                    }
+                    
+                    // Bounce off canvas edges
+                    if (particle.x < 0 || particle.x > canvas.width) {
+                        particle.speedX *= -1;
+                        particle.x = particle.x < 0 ? 0 : canvas.width;
+                    }
+                    if (particle.y < 0) {
+                        particle.y = 0;
+                        particle.speedY *= -1;
+                    }
+                    if (particle.y > canvas.height) {
+                        particle.y = canvas.height;
+                        particle.speedY *= -1;
+                    }
+                    
+                    // Reset particles that get too far out of bounds
+                    if (particle.y < -50 || particle.y > canvas.height + 50 || 
+                        particle.x < -50 || particle.x > canvas.width + 50) {
+                        return resetParticle('h2o');
+                    }
+                    
+                    // Detect and reset particles that are stuck (very low movement over time)
+                    if (particle.stuckCounter === undefined) {
+                        particle.stuckCounter = 0;
+                        particle.lastPosition = { x: particle.x, y: particle.y };
+                    }
+                    
+                    // Check if particle has moved significantly
+                    const distanceMoved = Math.sqrt(
+                        Math.pow(particle.x - particle.lastPosition.x, 2) + 
+                        Math.pow(particle.y - particle.lastPosition.y, 2)
+                    );
+                    
+                    if (distanceMoved < 1) {
+                        particle.stuckCounter++;
+                        
+                        // If particle hasn't moved for several frames, give it a boost or reset it
+                        if (particle.stuckCounter > 20) {
+                            if (Math.random() < 0.7) {
+                                // Give it a strong random impulse to escape
+                                particle.speedX = (Math.random() - 0.5) * 4;
+                                particle.speedY = (Math.random() - 0.5) * 4;
+                                particle.stuckCounter = 0;
+                            } else {
+                                // Sometimes just reset the particle completely
+                                return resetParticle('h2o');
+                            }
+                        }
+                    } else {
+                        // Particle is moving normally, reset counter
+                        particle.stuckCounter = 0;
+                        particle.lastPosition = { x: particle.x, y: particle.y };
+                    }
+                    
+                    // Continue with normal movement if not crossing any boundaries
+                    if (currentView === 'cross-section') {
+                        particle.y += particle.speedY;
+                    }
+                    
+                    return particle;
+                });
+            }
+            
+            // Reset particle functions remain the same
+            function resetParticle(type) {
+                // Check if it's nighttime for O2 respawning location logic
+                const isNighttime = environmentFactors.timeOfDay < 6 || environmentFactors.timeOfDay > 18;
+                
+                if (type === 'co2') {
+                    return {
+                        x: canvas.width * Math.random(),
+                        y: canvas.height + 20 + Math.random() * 30, // Below the leaf
+                        radius: 5, 
+                        speedX: (Math.random() - 0.5) * 2.5,
+                        speedY: -Math.random() * 2.5, // Upward movement
+                        type: 'co2',
+                        stuckCounter: 0,
+                        lastPosition: { x: 0, y: 0 }
+                    };
+                } else if (type === 'o2') {
+                    // During nighttime, O2 should either transform into CO2 inside the leaf or respawn from bottom
+                    if (isNighttime) {
+                        // During nighttime, 70% chance to transform into CO2 inside the leaf
+                        if (Math.random() < 0.9 && particleVisibility.co2) {
+                            // Define mesophyll layers for CO2 production from O2
+                            const palisadeStartY = UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS;
+                            const palisadeHeight = (LOWER_EPIDERMIS_Y - UPPER_EPIDERMIS_Y - 2 * EPIDERMIS_THICKNESS) * 0.4;
+                            const spongyStartY = palisadeStartY + palisadeHeight;
+                            
+                            // Higher probability to transform in spongy mesophyll
+                            const inSpongyProb = 0.7; // 70% chance for spongy vs palisade
+                            
+                            // Determine position in mesophyll
+                            let yPosition;
+                            if (Math.random() < inSpongyProb) {
+                                // Position in spongy mesophyll
+                                yPosition = spongyStartY + Math.random() * (LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS - spongyStartY);
+                            } else {
+                                // Position in palisade mesophyll
+                                yPosition = palisadeStartY + Math.random() * palisadeHeight;
+                            }
+                            
+                            // Create CO2 in mesophyll from O2 "respiration"
+                            return {
+                                x: canvas.width * Math.random(),
+                                y: yPosition,
+                                radius: 5,
+                                speedX: (Math.random() - 0.5) * 2,
+                                speedY: (Math.random() - 0.5) * 2,
+                                type: 'co2', // Transformed to CO2
+                                stuckCounter: 0,
+                                lastPosition: { x: 0, y: 0 }
+                            };
+                        } else {
+                            // 30% chance to respawn from bottom
+                            return {
+                                x: canvas.width * Math.random(),
+                                y: canvas.height - Math.random() * 100, // Bottom of canvas at night
+                                radius: 5,
+                                speedX: (Math.random() - 0.5) * 2.5,
+                                speedY: -Math.random() * 2.5, // Upward movement if below leaf
+                                type: 'o2',
+                                stuckCounter: 0,
+                                lastPosition: { x: 0, y: 0 }
+                            };
+                        }
+                    } else {
+                        // During daytime, keeps its normal behavior of respawning inside the leaf
+                        return {
+                            x: canvas.width * Math.random(),
+                            y: UPPER_EPIDERMIS_Y + 20 + Math.random() * 50, // Inside leaf during day
+                            radius: 5, // Larger size
+                            speedX: (Math.random() - 0.5) * 2.5, // Faster
+                            speedY: (Math.random() - 0.5) * 2.5, // Random direction if inside leaf
+                            type: 'o2',
+                            stuckCounter: 0,
+                            lastPosition: { x: 0, y: 0 }
+                        };
+                    }
+                } else { // h2o
+                    return {
+                        x: canvas.width * Math.random(),
+                        y: UPPER_EPIDERMIS_Y + 20 + Math.random() * 50, // Inside leaf
+                        radius: 5, // Larger size
+                        speedX: (Math.random() - 0.5) * 2.5, // Faster
+                        speedY: (Math.random() - 0.5) * 2.5, // Faster
+                        type: 'h2o',
+                        stuckCounter: 0,
+                        lastPosition: { x: 0, y: 0 }
+                    };
+                }
+            }
+
+            // Randomly add CO2 particles with higher probability at night (low light)
+            const lightIntensity = environmentFactors.lightIntensity;
+            const isNighttime = environmentFactors.timeOfDay < 6 || environmentFactors.timeOfDay > 18;
+            
+            // Debug info - add a day/night indicator to the canvas
+            if (currentView === 'cross-section') {
+                // Draw day/night status indicator
+                const statusX = 70;
+                const statusY = 30;
+                
+                // Background
+                ctx.fillStyle = isNighttime ? "rgba(0, 0, 50, 0.7)" : "rgba(255, 200, 100, 0.7)";
+                ctx.beginPath();
+                ctx.roundRect(statusX - 50, statusY - 15, 100, 30, 10);
+                ctx.fill();
+                
+                // Text
+                ctx.fillStyle = "white";
+                ctx.font = "bold 14px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText(isNighttime ? "NIGHT" : "DAY", statusX, statusY + 5);
+                
+                // Current time
+                ctx.font = "12px Arial";
+                ctx.fillText(`${Math.floor(environmentFactors.timeOfDay)}:${Math.round((environmentFactors.timeOfDay % 1) * 60).toString().padStart(2, '0')}`, statusX, statusY + 20);
+            }
+            
+            // CO2 has higher probability of spawning inside leaf during low light (night)
+            if (particleVisibility.co2 && particles.co2.length < 20) {
+                // Base probability for spawning CO2
+                let spawnProbability = 0.02;
+                
+                // Increase spawn probability at night or low light
+                if (isNighttime || lightIntensity < 30) {
+                    spawnProbability = 0.05;
+                    
+                    // Higher chance to spawn inside the leaf at night
+                    const inLeafProbability = 0.6; // 60% chance to spawn inside leaf at night
+                    
+                    if (Math.random() < inLeafProbability) {
+                        // Determine where in the leaf to spawn CO2 (more in the mesophyll during respiration)
+                        // Define mesophyll layers
+                        const palisadeStartY = UPPER_EPIDERMIS_Y + EPIDERMIS_THICKNESS;
+                        const palisadeHeight = (LOWER_EPIDERMIS_Y - UPPER_EPIDERMIS_Y - 2 * EPIDERMIS_THICKNESS) * 0.4;
+                        const spongyStartY = palisadeStartY + palisadeHeight;
+                        
+                        // During night, cellular respiration produces CO2 in the mesophyll
+                        // Higher probability to spawn in spongy mesophyll (more mitochondria, higher respiration)
+                        const inSpongyProb = 0.7; // 70% chance to be in spongy mesophyll vs. palisade
+                        
+                        let yPosition;
+                        if (Math.random() < inSpongyProb) {
+                            // Spawn in spongy mesophyll
+                            yPosition = spongyStartY + Math.random() * (LOWER_EPIDERMIS_Y - EPIDERMIS_THICKNESS - spongyStartY);
+                        } else {
+                            // Spawn in palisade mesophyll
+                            yPosition = palisadeStartY + Math.random() * palisadeHeight;
+                        }
+                        
+                        // Spawn CO2 inside the leaf (mesophyll) - cellular respiration during night
+                        particles.co2.push({
+                            x: Math.random() * canvas.width,
+                            y: yPosition,
+                            radius: 5,
+                            speedX: (Math.random() - 0.5) * 2,
+                            speedY: (Math.random() - 0.5) * 2,
+                            type: 'co2',
+                            stuckCounter: 0,
+                            lastPosition: { x: 0, y: 0 }
+                        });
+                    } else if (Math.random() < spawnProbability) {
+                        // Spawn outside the leaf
+                        particles.co2.push({
+                            x: Math.random() * canvas.width,
+                            y: canvas.height - Math.random() * 100,
+                            radius: 5,
+                            speedX: (Math.random() - 0.5) * 2.5,
+                            speedY: -Math.random() * 2.5,
+                            type: 'co2',
+                            stuckCounter: 0,
+                            lastPosition: { x: 0, y: 0 }
+                        });
+                    }
+                } else if (Math.random() < spawnProbability) {
+                    // Regular daytime spawning (outside leaf)
+                    particles.co2.push({
+                        x: Math.random() * canvas.width,
+                        y: canvas.height - Math.random() * 100,
+                        radius: 5,
+                        speedX: (Math.random() - 0.5) * 2.5,
+                        speedY: -Math.random() * 2.5,
+                        type: 'co2',
+                        stuckCounter: 0,
+                        lastPosition: { x: 0, y: 0 }
+                    });
+                }
+            }
+        }
+        
+        // Filter out any particles that have been marked for despawning (moved out of bounds)
+        particles.co2 = particles.co2.filter(particle => 
+            particle.x >= -30 && particle.x <= canvas.width + 30 && 
+            particle.y >= -30 && particle.y <= canvas.height + 30
+        );
+        
+        particles.o2 = particles.o2.filter(particle => 
+            particle.x >= -30 && particle.x <= canvas.width + 30 && 
+            particle.y >= -30 && particle.y <= canvas.height + 30
+        );
+        
+        particles.h2o = particles.h2o.filter(particle => 
+            particle.x >= -30 && particle.x <= canvas.width + 30 && 
+            particle.y >= -30 && particle.y <= canvas.height + 30
+        );
+        
+        // Draw wavy epidermal pattern instead of rectangular cells
+        function drawWavyEpidermalPattern(width, height, scaleFactor) {
+            // Use smaller cell size for more natural appearance
+            const cellSize = 30 * scaleFactor;
+            
+            // Create semi-transparent pattern with wavy cell walls
+            ctx.fillStyle = "rgba(220, 240, 210, 0.3)"; // Very light translucent green
+            
+            // Use Perlin-like noise to create natural-looking cell distribution
+            const cellRows = Math.ceil(height / cellSize);
+            const cellCols = Math.ceil(width / cellSize);
+            
+            // Fixed seed for consistent pattern
+            const seed = 12345;
+            
+            // Simple pseudo-random function
+            const random = (x, y) => {
+                const value = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+                return value - Math.floor(value);
+            };
+            
+            // Draw irregular, wavy cells
+            for (let i = 0; i < cellCols + 1; i++) {
+                for (let j = 0; j < cellRows + 1; j++) {
+                    // Base position plus random offset
+                    const baseX = i * cellSize;
+                    const baseY = j * cellSize;
+                    
+                    // Create irregular cell shapes with wavy edges
+                    ctx.beginPath();
+                    
+                    // Create points with controlled randomness for wavy pattern
+                    const points = [];
+                    const cornerCount = 6; // More corners for a more irregular shape
+                    
+                    for (let k = 0; k < cornerCount; k++) {
+                        const angle = (k / cornerCount) * Math.PI * 2;
+                        // Get radius with some randomness but stay within cell bounds
+                        const radius = cellSize * 0.5 * (0.7 + random(i * 100 + k, j * 100 + k) * 0.6);
+                        
+                        // Calculate point with slight wave pattern
+                        const x = baseX + cellSize * 0.5 + Math.cos(angle) * radius;
+                        const y = baseY + cellSize * 0.5 + Math.sin(angle) * radius;
+                        
+                        points.push({x, y});
+                    }
+                    
+                    // Skip cells where stomata will be
+                    let skipCell = false;
+                    for (const stomata of stomataPositions) {
+                        const cellCenterX = baseX + cellSize/2;
+                        const cellCenterY = baseY + cellSize/2;
+                        const dx = stomata.x - cellCenterX;
+                        const dy = stomata.y - cellCenterY;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        
+                        if (dist < stomata.size * 0.7) {
+                            skipCell = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!skipCell) {
+                        // Draw the cell path
+                        ctx.moveTo(points[0].x, points[0].y);
+                        
+                        // Connect points with curved lines for wavy appearance
+                        for (let k = 1; k <= points.length; k++) {
+                            const current = points[k % points.length];
+                            const prev = points[k - 1];
+                            const next = points[(k + 1) % points.length];
+                            
+                            // Control points for curve
+                            const cp1x = prev.x + (current.x - prev.x) * 0.5 + random(i+k, j*2+k) * 8 - 4;
+                            const cp1y = prev.y + (current.y - prev.y) * 0.5 + random(i*2+k, j+k) * 8 - 4;
+                            
+                            ctx.quadraticCurveTo(cp1x, cp1y, current.x, current.y);
+                        }
+                        
+                        ctx.closePath();
+                        ctx.fill();
+                        
+                        // Subtle cell walls - more natural looking
+                        ctx.strokeStyle = "rgba(100, 160, 100, 0.25)"; // Very translucent green for cell walls
+                        ctx.lineWidth = 0.6 * scaleFactor;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        // Draw the microscope view with multiple stomata
+        function drawMicroscopeView() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const scaleFactor = width / 500; // Scale based on canvas width
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Background color - translucent green instead of solid yellowish-brown
+            ctx.fillStyle = "rgba(180, 215, 160, 0.5)"; // Translucent light green
+            ctx.fillRect(0, 0, width, height);
+            
+            // Draw wavy epidermal cell pattern
+            drawWavyEpidermalPattern(width, height, scaleFactor);
+            
+            // Calculate aperture factor
+            const apertureFactor = simulationData.stomatalAperture / 100;
+            
+            // Draw each stomata
+            for (const stomata of stomataPositions) {
+                drawSingleStomata(stomata.x, stomata.y, stomata.size, stomata.angle, apertureFactor);
+            }
+            
+            // Add microscope-like vignette effect
+            const vignetteGradient = ctx.createRadialGradient(
+                width / 2, height / 2, height * 0.3,
+                width / 2, height / 2, height * 0.7
+            );
+            vignetteGradient.addColorStop(0, "rgba(200, 220, 180, 0)");
+            vignetteGradient.addColorStop(1, "rgba(0, 0, 0, 0.7)");
+            
+            ctx.fillStyle = vignetteGradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            // Update scale bar for microscope view
+            updateScaleBar('microscope');
+        }
+        
+        // Function to draw a single stomata with realistic colors
+        // Update the stomata background to be more translucent
+        function drawSingleStomata(x, y, size, angle, apertureFactor) {
+            ctx.save();
+            
+            // Move to stomata position and rotate
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            
+            // Constants for guard cell dimensions
+            const guardCellLength = size * 0.9;  // Length of the entire stomatal complex
+            const guardCellWidth = size * 0.5;   // Width of the entire stomatal complex
+            
+            // Create 3D effect with shadow for raised appearance
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            
+            // COMPONENT 1: Stomatal complex (base/background area)
+            // Changed to translucent green
+            ctx.fillStyle = "rgba(200, 230, 190, 0.4)"; // Very translucent green background
+            ctx.beginPath();
+            ctx.ellipse(0, 0, guardCellLength * 0.5, guardCellWidth * 0.65, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Reset shadow for other elements
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            
+            // Fixed separation along horizontal axis - this affects guard cell position
+            const fixedSeparation = guardCellLength * 0.1;
+            
+            // COMPONENT 2: Left guard cell (kidney-shaped)
+            ctx.fillStyle = cellTexturePattern || "#91DE65"; // Keep medium green for guard cells
+            ctx.save();
+            
+            // Draw kidney-shaped guard cell
+            ctx.beginPath();
+            // Left guard cell
+            const centerX = -fixedSeparation/2;
+            const centerY = 0;
+            const width = guardCellLength * 0.8;
+            const height = guardCellWidth * 0.6;
+            
+            // Start at the left point
+            ctx.moveTo(centerX - width/2, centerY);
+            
+            // Top half of the kidney (curved inward)
+            ctx.bezierCurveTo(
+                centerX - width/3, centerY - height/4,  // control point 1
+                centerX + width/3, centerY - height/4,  // control point 2
+                centerX + width/2, centerY              // end point
+            );
+            
+            // Right side curve
+            ctx.quadraticCurveTo(
+                centerX + width/2, centerY + height/2, 
+                centerX, centerY + height/2
+            );
+            
+            // Bottom half of the kidney (curved inward)
+            ctx.bezierCurveTo(
+                centerX - width/3, centerY + height/2,  // control point 1
+                centerX - width*2/3, centerY + height/3,  // control point 2
+                centerX - width/2, centerY              // end point
+            );
+            
+            // Left side curve
+            ctx.quadraticCurveTo(
+                centerX - width/2, centerY - height/3,
+                centerX - width/3, centerY - height/3
+            );
+            
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+            
+            // COMPONENT 3: Right guard cell (kidney-shaped)
+            ctx.fillStyle = cellTexturePattern || "#91DE65"; // Same green for both guard cells
+            ctx.save();
+            
+            // Mirror the kidney shape
+            ctx.scale(-1, 1);
+            
+            // Draw kidney-shaped guard cell (mirrored)
+            ctx.beginPath();
+            // Right guard cell (mirrored)
+            const mirroredCenterX = -fixedSeparation/2;
+            
+            // Start at the left point (mirrored)
+            ctx.moveTo(mirroredCenterX - width/2, centerY);
+            
+            // Top half of the kidney (curved inward)
+            ctx.bezierCurveTo(
+                mirroredCenterX - width/3, centerY - height/4,  // control point 1
+                mirroredCenterX + width/3, centerY - height/4,  // control point 2
+                mirroredCenterX + width/2, centerY              // end point
+            );
+            
+            // Right side curve
+            ctx.quadraticCurveTo(
+                mirroredCenterX + width/2, centerY + height/2, 
+                mirroredCenterX, centerY + height/2
+            );
+            
+            // Bottom half of the kidney (curved inward)
+            ctx.bezierCurveTo(
+                mirroredCenterX - width/3, centerY + height/2,  // control point 1
+                mirroredCenterX - width*2/3, centerY + height/3,  // control point 2
+                mirroredCenterX - width/2, centerY              // end point
+            );
+            
+            // Left side curve
+            ctx.quadraticCurveTo(
+                mirroredCenterX - width/2, centerY - height/3,
+                mirroredCenterX - width/3, centerY - height/3
+            );
+            
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+            
+            // COMPONENT 4: The pore (lens-shaped area between the guard cells)
+            if (apertureFactor > 0.01) {
+                // IMPORTANT: This is where the pore size is calculated
+                const poreLength = guardCellLength * 0.7; // Fixed length
+                const maxPoreWidth = guardCellWidth * 0.5; // Maximum possible width
+                const poreWidth = maxPoreWidth * apertureFactor; // Actual width based on aperture factor
+                
+                ctx.fillStyle = "#2E3B1F"; // Keep dark green/black for pore
+                
+                // Draw pore as a proper lens shape that widens vertically (short axis)
+                ctx.beginPath();
+                ctx.moveTo(-poreLength/2, 0);
+                // Top curve widens with aperture
+                ctx.quadraticCurveTo(-poreLength/4, -poreWidth/2, 0, -poreWidth/2);
+                ctx.quadraticCurveTo(poreLength/4, -poreWidth/2, poreLength/2, 0);
+                // Bottom curve widens with aperture
+                ctx.quadraticCurveTo(poreLength/4, poreWidth/2, 0, poreWidth/2);
+                ctx.quadraticCurveTo(-poreLength/4, poreWidth/2, -poreLength/2, 0);
+                ctx.closePath();
+                ctx.fill();
+            } else {
+                // When closed, just draw a thin horizontal line
+                ctx.strokeStyle = "#5A6149"; // Dark green-gray for closed pore line
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-guardCellLength * 0.4, 0);
+                ctx.lineTo(guardCellLength * 0.4, 0);
+                ctx.stroke();
+            }
+            
+            // COMPONENT 5: Guard cell ridges that line the pore
+            ctx.strokeStyle = "#A8E873"; // Keep lighter green for guard cell ridges
+            ctx.lineWidth = 6;
+            ctx.lineJoin = "round";
+            ctx.lineCap = "round";
+            
+            // The ridges follow the pore - they should vary with aperture width
+            const ridgeWidth = guardCellWidth * 0.3 * apertureFactor; // Varies with aperture
+            
+            // Top ridge
+            ctx.beginPath();
+            ctx.moveTo(-guardCellLength * 0.4, -ridgeWidth);
+            // Curve following the top of the pore
+            ctx.bezierCurveTo(
+                -guardCellLength * 0.2, -ridgeWidth * 1.2, 
+                guardCellLength * 0.2, -ridgeWidth * 1.2,
+                guardCellLength * 0.4, -ridgeWidth
+            );
+            ctx.stroke();
+            
+            // Bottom ridge
+            ctx.beginPath();
+            ctx.moveTo(-guardCellLength * 0.4, ridgeWidth);
+            // Curve following the bottom of the pore
+            ctx.bezierCurveTo(
+                -guardCellLength * 0.2, ridgeWidth * 1.2, 
+                guardCellLength * 0.2, ridgeWidth * 1.2,
+                guardCellLength * 0.4, ridgeWidth
+            );
+            ctx.stroke();
+            
+            // COMPONENT 6: Outer edges/outlines of guard cells
+            ctx.strokeStyle = "rgba(229, 217, 179, 0.7)"; // Keep light translucent brownish for cell outlines
+            ctx.lineWidth = 1.5;
+            
+            // Left guard cell outline
+            ctx.beginPath();
+            // Reuse the same path as the left guard cell
+            ctx.moveTo(centerX - width/2, centerY);
+            ctx.bezierCurveTo(
+                centerX - width/3, centerY - height/4,
+                centerX + width/3, centerY - height/4,
+                centerX + width/2, centerY
+            );
+            ctx.quadraticCurveTo(
+                centerX + width/2, centerY + height/2, 
+                centerX, centerY + height/2
+            );
+            ctx.bezierCurveTo(
+                centerX - width/3, centerY + height/2,
+                centerX - width*2/3, centerY + height/3,
+                centerX - width/2, centerY
+            );
+            ctx.quadraticCurveTo(
+                centerX - width/2, centerY - height/3,
+                centerX - width/3, centerY - height/3
+            );
+            ctx.closePath();
+            ctx.stroke();
+            
+            // Right guard cell outline (mirrored)
+            ctx.save();
+            ctx.scale(-1, 1);
+            // Reuse the same path as the mirrored right guard cell
+            ctx.beginPath();
+            ctx.moveTo(mirroredCenterX - width/2, centerY);
+            ctx.bezierCurveTo(
+                mirroredCenterX - width/3, centerY - height/4,
+                mirroredCenterX + width/3, centerY - height/4,
+                mirroredCenterX + width/2, centerY
+            );
+            ctx.quadraticCurveTo(
+                mirroredCenterX + width/2, centerY + height/2, 
+                mirroredCenterX, centerY + height/2
+            );
+            ctx.bezierCurveTo(
+                mirroredCenterX - width/3, centerY + height/2,
+                mirroredCenterX - width*2/3, centerY + height/3,
+                mirroredCenterX - width/2, centerY
+            );
+            ctx.quadraticCurveTo(
+                mirroredCenterX - width/2, centerY - height/3,
+                mirroredCenterX - width/3, centerY - height/3
+            );
+            ctx.closePath();
+            ctx.restore();
+            ctx.stroke();
+            
+            // COMPONENT 7: Chloroplasts
+            ctx.fillStyle = "#3A9D23"; // Keep bright green for chloroplasts
+            
+            // Use fixed positions for chloroplasts to prevent wobbling
+            const stomata = stomataPositions.find(s => s.x === x && s.y === y);
+            const chloroplastOffsets = stomata ? stomata.chloroplastOffsets : [];
+            
+            // Major cluster in upper left corner (as seen in reference image)
+            const clusterX = -guardCellLength * 0.3;
+            const clusterY = -guardCellWidth * 0.25;
+            
+            // Draw a dense cluster of chloroplasts
+            for (let i = 0; i < 10; i++) {
+                const offsetIndex = i % chloroplastOffsets.length;
+                const offsetX = chloroplastOffsets[offsetIndex] ? chloroplastOffsets[offsetIndex].x * 0.7 : 0;
+                const offsetY = chloroplastOffsets[offsetIndex] ? chloroplastOffsets[offsetIndex].y * 0.7 : 0;
+                
+                ctx.beginPath();
+                ctx.ellipse(
+                    clusterX + offsetX, 
+                    clusterY + offsetY, 
+                    3, 
+                    4, 
+                    i * 0.3, // Fixed rotation
+                    0, Math.PI * 2
+                );
+                ctx.fill();
+            }
+            
+            // Scatter additional chloroplasts around perimeter of each guard cell
+            for (let i = 0; i < 12; i++) {
+                const angle = Math.PI * 2 * i / 12;
+                const radiusX = guardCellLength * 0.35;
+                const radiusY = guardCellWidth * 0.25;
+                
+                // Left cell chloroplasts
+                const leftX = -fixedSeparation/2 + Math.cos(angle) * radiusX;
+                const leftY = Math.sin(angle) * radiusY;
+                
+                ctx.beginPath();
+                ctx.ellipse(
+                    leftX,
+                    leftY,
+                    2,
+                    3,
+                    angle,
+                    0, Math.PI * 2
+                );
+                ctx.fill();
+                
+                // Right cell chloroplasts
+                const rightX = fixedSeparation/2 + Math.cos(angle) * radiusX;
+                const rightY = Math.sin(angle) * radiusY;
+                
+                ctx.beginPath();
+                ctx.ellipse(
+                    rightX,
+                    rightY,
+                    2,
+                    3,
+                    angle,
+                    0, Math.PI * 2
+                );
+                ctx.fill();
+            }
+            
+            ctx.restore();
+        }
+        
+        // Function to draw the dynamic stomata in the cross-section view
+        function drawDynamicStomata(ctx, width, height, scaleFactor) {
+            const leafStartX = -width * 0.2; // Consistent with static elements
+            const leafEndX = width;
+            const leafCenterY = height * 0.50;
+            const lowerEpidermisY = leafCenterY + 85 * scaleFactor;
+            const epidermisThickness = 10 * scaleFactor;
+            
+            // Current aperture factor (0-1)
+            const apertureFactor = simulationData.stomatalAperture / 100;
+            
+            // Place stomata at fixed intervals
+            for (let x = leafStartX + 100 * scaleFactor; x < leafEndX - 100 * scaleFactor; x += 150 * scaleFactor) {
+                // Add some variability to x positions
+                const stomataX = x + (getFixedRandom(x) - 0.5) * 50 * scaleFactor;
+                const stomataWidth = 40 * scaleFactor;
+                
+                // Draw stomata with current aperture
+                drawStomataInCrossSection(ctx, stomataX, lowerEpidermisY - epidermisThickness, stomataWidth, epidermisThickness, apertureFactor, scaleFactor);
+            }
+        }
+        
+        // Helper function to draw individual stomata in cross-section
+        function drawStomataInCrossSection(ctx, x, y, width, height, apertureFactor, scaleFactor) {
+            // Guard cell width
+            const guardCellWidth = width / 2;
+            
+            // Aperture gap based on aperture factor (0-1)
+            const maxGap = width * 0.3;
+            const gap = maxGap * apertureFactor;
+            
+            // Draw left guard cell
+            ctx.fillStyle = "#7cb342"; // Slightly darker green for guard cells
+            ctx.beginPath();
+            ctx.ellipse(
+                x - gap/2, 
+                y + height/2,
+                guardCellWidth/2, 
+                height * 0.8,
+                0, 0, Math.PI * 2
+            );
+            ctx.fill();
+            
+            // Draw right guard cell
+            ctx.beginPath();
+            ctx.ellipse(
+                x + gap/2, 
+                y + height/2,
+                guardCellWidth/2, 
+                height * 0.8,
+                0, 0, Math.PI * 2
+            );
+            ctx.fill();
+            
+            // Cell outlines
+            ctx.strokeStyle = "rgba(60, 120, 60, 0.5)";
+            ctx.lineWidth = 0.8 * scaleFactor;
+            ctx.beginPath();
+            ctx.ellipse(
+                x - gap/2, 
+                y + height/2,
+                guardCellWidth/2, 
+                height * 0.8,
+                0, 0, Math.PI * 2
+            );
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.ellipse(
+                x + gap/2, 
+                y + height/2,
+                guardCellWidth/2, 
+                height * 0.8,
+                0, 0, Math.PI * 2
+            );
+            ctx.stroke();
+            
+            // Draw stomatal pore
+            if (apertureFactor > 0.05) {
+                // More accurate sub-stomatal cavity (air space beneath pore)
+                ctx.fillStyle = "#a9f5e9"; // Very light green for air space
+                
+                // Draw the cavity under the stomata
+                ctx.beginPath();
+                const cavityWidth = width * 0.6;
+                const cavityHeight = height * 3;
+                
+                // Create a path for the substomatal cavity
+                ctx.beginPath();
+                ctx.ellipse(
+                    x, 
+                    y + height + cavityHeight/2,
+                    cavityWidth/2, 
+                    cavityHeight/2,
+                    0, 0, Math.PI * 2
+                );
+                ctx.fill();
+            }
+        }
+        
+        // Draw the cross-section view with anatomically correct leaf structure
+        function drawCrossSectionView() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const scaleFactor = width / 500; // Zoomed back out to 100 μm field of view (changed from 250 to 500)
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Create/update sky gradient based on time of day - this needs to be dynamic
+            const timeOfDay = environmentFactors.timeOfDay;
+            
+            // Sky colors for different times of the day
+            const skyColors = {
+                midnight: "#1a237e", // Deep blue at midnight
+                predawn: "#303f9f",  // Slightly lighter blue pre-dawn
+                dawn: "#5c6bc0",     // Purple-blue dawn
+                sunrise: "#ff9e40",  // Orange sunrise
+                morning: "#fff8e1",  // Yellowish white for morning
+                noon: "#fffde7",     // Bright yellowish white for noon
+                afternoon: "#fff8e1", // Yellowish white afternoon
+                sunset: "#ff9e40",   // Orange sunset
+                dusk: "#5e35b1",     // Purple-blue dusk
+                night: "#283593"     // Dark blue night
+            };
+            
+            // Determine which part of the day cycle we're in
+            let gradientTop, gradientBottom;
+            
+            if (timeOfDay < 4) { // Midnight to pre-dawn (0-4)
+                const factor = timeOfDay / 4;
+                gradientTop = blendColors(skyColors.midnight, skyColors.predawn, factor);
+                gradientBottom = blendColors("#000000", "#0a1232", factor);
+            } else if (timeOfDay < 6) { // Pre-dawn to sunrise (4-6)
+                const factor = (timeOfDay - 4) / 2;
+                gradientTop = blendColors(skyColors.predawn, skyColors.sunrise, factor);
+                gradientBottom = blendColors("#0a1232", "#7f4020", factor);
+            } else if (timeOfDay < 8) { // Sunrise to morning (6-8)
+                const factor = (timeOfDay - 6) / 2;
+                gradientTop = blendColors(skyColors.sunrise, skyColors.morning, factor);
+                gradientBottom = blendColors("#7f4020", "#fff0c4", factor);
+            } else if (timeOfDay < 12) { // Morning to noon (8-12)
+                const factor = (timeOfDay - 8) / 4;
+                gradientTop = blendColors(skyColors.morning, skyColors.noon, factor);
+                gradientBottom = blendColors("#fff0c4", "#fffacd", factor);
+            } else if (timeOfDay < 16) { // Noon to afternoon (12-16)
+                const factor = (timeOfDay - 12) / 4;
+                gradientTop = blendColors(skyColors.noon, skyColors.afternoon, factor);
+                gradientBottom = blendColors("#fffacd", "#fff0c4", factor);
+            } else if (timeOfDay < 18) { // Afternoon to sunset (16-18)
+                const factor = (timeOfDay - 16) / 2;
+                gradientTop = blendColors(skyColors.afternoon, skyColors.sunset, factor);
+                gradientBottom = blendColors("#fff0c4", "#7f4020", factor);
+            } else if (timeOfDay < 20) { // Sunset to dusk (18-20)
+                const factor = (timeOfDay - 18) / 2;
+                gradientTop = blendColors(skyColors.sunset, skyColors.dusk, factor);
+                gradientBottom = blendColors("#7f4020", "#0a1232", factor);
+            } else { // Dusk to midnight (20-24)
+                const factor = (timeOfDay - 20) / 4;
+                gradientTop = blendColors(skyColors.dusk, skyColors.midnight, factor);
+                gradientBottom = blendColors("#0a1232", "#000000", factor);
+            }
+            
+            // Create sky gradient with upper side always brighter
+            const skyGradient = ctx.createLinearGradient(0, 0, 0, height);
+            skyGradient.addColorStop(0, gradientTop); // Upper sky
+            skyGradient.addColorStop(0.4, blendColors(gradientTop, gradientBottom, 0.3)); // Mid sky (leaning toward top color)
+            skyGradient.addColorStop(1, gradientBottom); // Lower sky
+            
+            // Apply gradient to entire canvas
+            ctx.fillStyle = skyGradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            // Check if we need to initialize or update the static canvas
+            if (!isStaticCanvasInitialized || staticCanvas.width !== width || staticCanvas.height !== height) {
+                // Resize the static canvas
+                staticCanvas.width = width;
+                staticCanvas.height = height;
+                
+                // Draw all static elements to the offscreen canvas
+                drawStaticLeafElements(staticCtx, width, height, scaleFactor);
+                
+                // Mark as initialized
+                isStaticCanvasInitialized = true;
+            }
+            
+            // Draw the static elements from cached canvas
+            ctx.drawImage(staticCanvas, 0, 0);
+            
+            // Remove the call to drawDynamicStomata as we're keeping the stomata in the static layer
+            // drawDynamicStomata(ctx, width, height, scaleFactor);
+        }
+        
+        // Helper function to blend two colors
+        function blendColors(color1, color2, factor) {
+            // Parse colors to get RGB values
+            const c1 = parseColor(color1);
+            const c2 = parseColor(color2);
+            
+            // Linear interpolation between colors
+            const r = Math.round(c1.r + factor * (c2.r - c1.r));
+            const g = Math.round(c1.g + factor * (c2.g - c1.g));
+            const b = Math.round(c1.b + factor * (c2.b - c1.b));
+            
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+        
+        // Helper function to parse color strings into RGB components
+        function parseColor(color) {
+            // For hex colors
+            if (color.startsWith('#')) {
+                const r = parseInt(color.substring(1, 3), 16);
+                const g = parseInt(color.substring(3, 5), 16);
+                const b = parseInt(color.substring(5, 7), 16);
+                return { r, g, b };
+            }
+            // For rgb colors
+            else if (color.startsWith('rgb')) {
+                const parts = color.match(/\d+/g).map(Number);
+                return { r: parts[0], g: parts[1], b: parts[2] };
+            }
+            return { r: 0, g: 0, b: 0 }; // Default fallback
+        }
+        
+        // Helper function for deterministic randomness based on input value
+        function getFixedRandom(seed) {
+            // Simple deterministic pseudo-random function
+            const x = Math.sin(seed) * 10000;
+            return x - Math.floor(x);
+        }
+        
+        // New function to draw an improved legend
+        function drawImprovedLegend(width, height, bgColor) {
+            // Create semi-transparent background for legend
+            const isNightMode = bgColor === "#2c3e50"; // Check if it's night mode
+            const textColor = isNightMode ? "white" : "black";
+            
+            // Background panel for legend
+            ctx.fillStyle = isNightMode ? "rgba(0, 0, 0, 0.7)" : "rgba(255, 255, 255, 0.8)";
+            ctx.beginPath();
+            ctx.roundRect(10, 10, 170, 130, 8); // Increased height from 110 to 130
+            ctx.fill();
+            
+            // Add border
+            ctx.strokeStyle = isNightMode ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.3)";
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            
+            // Title
+            ctx.fillStyle = textColor;
+            ctx.font = "bold 16px Arial";
+            ctx.textAlign = "left";
+            ctx.fillText("Gas Exchange", 20, 30);
+            
+            const legendItemHeight = 30; // Increased for better spacing
+            const particleRadius = 8; // Increased to match larger particles
+            const lineHeight = 7;
+            
+            // CO2 - Carbon Dioxide
+            // Particle circle
+            ctx.fillStyle = "#000000"; // Black for CO2 (updated)
+            ctx.beginPath();
+            ctx.arc(30, 55, particleRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // White rim
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = "white";
+            ctx.font = "bold 9px Arial"; // Increased font size
+            ctx.textAlign = "center";
+            ctx.fillText("CO₂", 30, 55);
+            
+            // Description
+            ctx.fillStyle = textColor;
+            ctx.font = "14px Arial";
+            ctx.textAlign = "left";
+            ctx.fillText("Carbon Dioxide", 50, 59);
+            
+            // O2 - Oxygen
+            // Particle circle
+            ctx.fillStyle = "#FF0000"; // Red for O2 (updated)
+            ctx.beginPath();
+            ctx.arc(30, 55 + legendItemHeight, particleRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // White rim
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = "white";
+            ctx.font = "bold 9px Arial"; // Increased font size
+            ctx.textAlign = "center";
+            ctx.fillText("O₂", 30, 55 + legendItemHeight);
+            
+            // Description
+            ctx.fillStyle = textColor;
+            ctx.font = "14px Arial";
+            ctx.textAlign = "left";
+            ctx.fillText("Oxygen", 50, 59 + legendItemHeight);
+            
+            // H2O - Water
+            // Particle circle
+            ctx.fillStyle = "#0088FF"; // Blue for H2O (updated)
+            ctx.beginPath();
+            ctx.arc(30, 55 + 2 * legendItemHeight, particleRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // White rim
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = "white";
+            ctx.font = "bold 8px Arial"; // Slightly larger for better readability
+            ctx.textAlign = "center";
+            ctx.fillText("H₂O", 30, 55 + 2 * legendItemHeight);
+            
+            // Description
+            ctx.fillStyle = textColor;
+            ctx.font = "14px Arial";
+            ctx.textAlign = "left";
+            ctx.fillText("Water Vapor", 50, 59 + 2 * legendItemHeight);
+        }
+        
+        // Draw particles of different gases
+        function drawParticles() {
+            // Don't draw particles in microscope view
+            if (currentView === 'microscope') {
+                return;
+            }
+            
+            const scaleFactor = canvas.width / 500;
+            
+            // CO2 particles
+            if (particleVisibility.co2) {
+                ctx.fillStyle = "#000000"; // Black for CO2
+                particles.co2.forEach(particle => {
+                    // Draw particle with improved visibility
+                    ctx.beginPath();
+                    
+                    // Regular CO2 particle
+                    ctx.fillStyle = "#000000"; // Black for CO2
+                    ctx.arc(particle.x, particle.y, particle.radius * scaleFactor * 1.5, 0, Math.PI * 2);
+                    
+                    ctx.fill();
+                    
+                    // Reset shadow for subsequent drawings
+                    ctx.shadowColor = 'transparent';
+                    ctx.shadowBlur = 0;
+                    
+                    // Draw white border for better visibility
+                    ctx.strokeStyle = "white";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    
+                    // Text with better contrast
+                    ctx.fillStyle = "white";
+                    ctx.font = `bold ${9 * scaleFactor}px Arial`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText("CO₂", particle.x, particle.y);
+                    ctx.fillStyle = "#000000";
+                });
+            }
+            
+            // O2 particles
+            if (particleVisibility.o2) {
+                ctx.fillStyle = "#FF0000"; // Red for O2
+                particles.o2.forEach(particle => {
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.radius * scaleFactor * 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Draw white border for better visibility
+                    ctx.strokeStyle = "white";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    
+                    // Text with better contrast
+                    ctx.fillStyle = "white";
+                    ctx.font = `bold ${9 * scaleFactor}px Arial`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText("O₂", particle.x, particle.y);
+                    ctx.fillStyle = "#FF0000";
+                });
+            }
+            
+            // H2O particles
+            if (particleVisibility.h2o) {
+                ctx.fillStyle = "#0088FF"; // Blue for water
+                particles.h2o.forEach(particle => {
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.radius * scaleFactor * 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Draw white border for better visibility
+                    ctx.strokeStyle = "white";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    
+                    // Text with better contrast
+                    ctx.fillStyle = "white";
+                    ctx.font = `bold ${7 * scaleFactor}px Arial`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText("H₂O", particle.x, particle.y);
+                    ctx.fillStyle = "#0088FF";
+                });
+            }
+        }
+        
+        // Calculate stomatal response to environmental factors
+        function calculateStomatalResponse() {
+            // Calculate stomatal aperture based on environmental factors
+            let aperture = 0;
+            
+            // Light increases stomatal opening during the day
+            const isDaytime = environmentFactors.timeOfDay >= 6 && environmentFactors.timeOfDay <= 18;
+            const lightFactor = isDaytime ? environmentFactors.lightIntensity * 0.8 : 0;
+            
+            // CO2 has an inverse relationship with stomatal opening
+            const co2Factor = (100 - environmentFactors.co2Concentration) * 0.3;
+            
+            // Temperature has an optimal range (around 15-30°C)
+            let tempFactor = 0;
+            if (environmentFactors.temperature < 15) {
+                tempFactor = environmentFactors.temperature * 5;
+            } else if (environmentFactors.temperature <= 30) {
+                tempFactor = 75;
+            } else {
+                tempFactor = Math.max(0, 75 - (environmentFactors.temperature - 30) * 7);
+            }
+            
+            // Low humidity decreases stomatal opening to conserve water
+            const humidityFactor = environmentFactors.humidity * 0.5;
+            
+            // Combine all factors with appropriate weights
+            aperture = (lightFactor * 0.5 + co2Factor * 0.2 + tempFactor * 0.15 + humidityFactor * 0.15);
+            aperture = Math.max(10, Math.min(90, aperture)); // Limit range from 10% to 90%
+            
+            // Calculate other dependent metrics
+            const photosynthesisRate = isDaytime ? 
+                (aperture * 0.5 + environmentFactors.lightIntensity * 0.4 + environmentFactors.co2Concentration * 0.3) / 1.2 : 
+                0;
+            
+            const waterLoss = aperture * 0.6 + (100 - environmentFactors.humidity) * 0.4;
+            
+            return {
+                stomatalAperture: Math.round(aperture),
+                photosynthesisRate: Math.round(Math.max(0, Math.min(100, photosynthesisRate))),
+                waterLoss: Math.round(Math.max(0, Math.min(100, waterLoss)))
+            };
+        }
+        
+        // Update status text
+        function updateStatusText() {
+            if (simulationData.stomatalAperture > 70) {
+                currentStatus.textContent = "ბაგეები ფართოდ გახსნილია";
+            } else if (simulationData.stomatalAperture > 30) {
+                currentStatus.textContent = "ბაგეები ნაწილობრივ ღიაა";
+            } else {
+                currentStatus.textContent = "ბაგეები ძირითადად დახურულია";
+            }
+        }
+        
+        // Initialize simulation when document is ready
+        function initializeSimulation() {
+            // Get all stomata positions in microscope view
+            stomataPositions = generateStomataPositions(canvas.width, canvas.height);
+            
+            // Generate initial particles
+            generateParticles();
+            
+            // Initialize light intensity based on time of day
+            updateLightIndicator(environmentFactors.timeOfDay);
+            
+            // Start animation
+            requestAnimationFrame(animate);
+        }
+        
+        // Draw the scene
+        function drawScene() {
+            if (currentView === 'microscope') {
+                drawMicroscopeView();
+            } else {
+                drawCrossSectionView();
+                drawParticles();
+            }
+        }
+        
+        // Animation loop
+        function animate() {
+            // Only update particles if we're in cross-section view
+            if (currentView === 'cross-section') {
+                updateParticles();
+            }
+            
+            // Always draw the scene
+            drawScene();
+            
+            // Continue the animation loop
+            requestAnimationFrame(animate);
+        }
+        
+        // Initialize the simulation
+        initializeSimulation();
+        
+        // Update background color based on time of day (more subtle effect)
+        function updateBackgroundColor() {
+            const timeOfDay = environmentFactors.timeOfDay;
+            const isDaytime = timeOfDay >= 6 && timeOfDay <= 18;
+            document.body.style.backgroundColor = isDaytime ? "#fffde7" : "#2c3e50";
+        }
+        
+        // Initialize controls
+        function initControls() {
+            // View toggle buttons
+            microscopeViewBtn.addEventListener('click', () => {
+                currentView = 'microscope';
+                microscopeViewBtn.classList.add('active');
+                crossSectionViewBtn.classList.remove('active');
+                // Hide particle toggles in microscope view
+                document.getElementById('particle-toggle-container').style.display = 'none';
+                drawScene(); // Redraw immediately when changing views
+            });
+            
+            crossSectionViewBtn.addEventListener('click', () => {
+                currentView = 'cross-section';
+                microscopeViewBtn.classList.remove('active');
+                crossSectionViewBtn.classList.add('active');
+                // Show particle toggles in cross-section view
+                document.getElementById('particle-toggle-container').style.display = 'flex';
+                // Reset the static canvas flag to force redrawing when switching views
+                isStaticCanvasInitialized = false;
+                drawScene(); // Redraw immediately when changing views
+            });
+            
+            // Particle toggle buttons
+            const toggleCO2Btn = document.getElementById('toggle-co2');
+            const toggleO2Btn = document.getElementById('toggle-o2');
+            const toggleH2OBtn = document.getElementById('toggle-h2o');
+            const toggleAllBtn = document.getElementById('toggle-all');
+            
+            toggleCO2Btn.addEventListener('click', () => {
+                particleVisibility.co2 = !particleVisibility.co2;
+                toggleCO2Btn.classList.toggle('active');
+                updateAllButtonState();
+                drawScene();
+            });
+            
+            toggleO2Btn.addEventListener('click', () => {
+                particleVisibility.o2 = !particleVisibility.o2;
+                toggleO2Btn.classList.toggle('active');
+                updateAllButtonState();
+                drawScene();
+            });
+            
+            toggleH2OBtn.addEventListener('click', () => {
+                particleVisibility.h2o = !particleVisibility.h2o;
+                toggleH2OBtn.classList.toggle('active');
+                updateAllButtonState();
+                drawScene();
+            });
+            
+            toggleAllBtn.addEventListener('click', () => {
+                const allVisible = particleVisibility.co2 && particleVisibility.o2 && particleVisibility.h2o;
+                // Toggle all buttons to the opposite state
+                particleVisibility.co2 = !allVisible;
+                particleVisibility.o2 = !allVisible;
+                particleVisibility.h2o = !allVisible;
+                particleVisibility.all = !allVisible;
+                
+                // Update UI to reflect new state
+                toggleCO2Btn.classList.toggle('active', !allVisible);
+                toggleO2Btn.classList.toggle('active', !allVisible);
+                toggleH2OBtn.classList.toggle('active', !allVisible);
+                toggleAllBtn.classList.toggle('active', !allVisible);
+                
+                drawScene();
+            });
+            
+            // Initialize All button state
+            updateAllButtonState();
+            
+            // Update value displays when sliders change
+            // Remove light slider event listener
+            
+            co2Slider.addEventListener('input', () => {
+                const value = co2Slider.value;
+                co2Value.textContent = `${value}%`;
+                environmentFactors.co2Concentration = Number(value);
+                updateSimulation();
+            });
+            
+            tempSlider.addEventListener('input', () => {
+                const value = tempSlider.value;
+                tempValue.textContent = `${value}°C`;
+                environmentFactors.temperature = Number(value);
+                updateSimulation();
+            });
+            
+            humiditySlider.addEventListener('input', () => {
+                const value = humiditySlider.value;
+                humidityValue.textContent = `${value}%`;
+                environmentFactors.humidity = Number(value);
+                updateSimulation();
+            });
+            
+            timeSlider.addEventListener('input', () => {
+                const value = timeSlider.value;
+                const hours = Math.floor(value);
+                const minutes = Math.round((value - hours) * 60);
+                timeValue.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+                environmentFactors.timeOfDay = Number(value);
+                
+                // Update light intensity based on time of day
+                updateLightIndicator(value);
+                
+                updateSimulation();
+            });
+            
+            // Preset buttons
+            optimalButton.addEventListener('click', () => {
+                setPreset({
+                    co2Concentration: 40,
+                    temperature: 25,
+                    humidity: 70,
+                    timeOfDay: 12
+                });
+            });
+            
+            droughtButton.addEventListener('click', () => {
+                setPreset({
+                    co2Concentration: 30,
+                    temperature: 35,
+                    humidity: 20,
+                    timeOfDay: 14
+                });
+            });
+            
+            nightButton.addEventListener('click', () => {
+                setPreset({
+                    co2Concentration: 50,
+                    temperature: 18,
+                    humidity: 75,
+                    timeOfDay: 2
+                });
+            });
+            
+            cloudyButton.addEventListener('click', () => {
+                setPreset({
+                    co2Concentration: 45,
+                    temperature: 22,
+                    humidity: 85,
+                    timeOfDay: 12
+                });
+            });
+        }
+        
+        // Set preset values
+        function setPreset(preset) {
+            // Update environment factors
+            environmentFactors = {...preset};
+            
+            // Calculate light intensity based on time of day
+            updateLightIndicator(preset.timeOfDay);
+            
+            // Update sliders and displays
+            co2Slider.value = preset.co2Concentration;
+            co2Value.textContent = `${preset.co2Concentration}%`;
+            
+            tempSlider.value = preset.temperature;
+            tempValue.textContent = `${preset.temperature}°C`;
+            
+            humiditySlider.value = preset.humidity;
+            humidityValue.textContent = `${preset.humidity}%`;
+            
+            timeSlider.value = preset.timeOfDay;
+            const hours = Math.floor(preset.timeOfDay);
+            const minutes = Math.round((preset.timeOfDay - hours) * 60);
+            timeValue.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            
+            // Update simulation
+            updateSimulation();
+        }
+        
+        // Update simulation based on environmental factors
+        function updateSimulation() {
+            // Calculate new simulation data
+            simulationData = calculateStomatalResponse();
+            
+            // Reset static canvas when environmental factors change
+            if (currentView === 'cross-section') {
+                isStaticCanvasInitialized = false;
+            }
+            
+            // Update displays
+            apertureValue.textContent = `${simulationData.stomatalAperture}%`;
+            photosynthesisValue.textContent = `${simulationData.photosynthesisRate}%`;
+            waterValue.textContent = `${simulationData.waterLoss}%`;
+            
+            // Update status text
+            updateStatusText();
+        }
+        
+        // Initialize simulation
+        function init() {
+            // Generate stomata positions
+            stomataPositions = generateStomataPositions(canvas.width, canvas.height);
+            
+            // Create lookup textures (pre-computed effects)
+            createTextures();
+            
+            // Initialize particles
+            initParticles();
+            
+            // Initialize controls
+            initControls();
+            
+            // Update simulation
+            updateSimulation();
+            
+            // Initialize view-dependent elements
+            if (currentView === 'cross-section') {
+                document.getElementById('particle-toggle-container').style.display = 'flex';
+            } else {
+                document.getElementById('particle-toggle-container').style.display = 'none';
+            }
+            
+            // Start animation loop
+            animate();
+        }
+        
+        // Call init when the window is loaded
+        window.addEventListener('load', init);
+        
+        // Regenerate stomata when window is resized
+        window.addEventListener('resize', () => {
+            stomataPositions = generateStomataPositions(canvas.width, canvas.height);
+        });
+        
+        // New function to update scale bar based on current view
+        function updateScaleBar(viewType) {
+            // Make sure scale bar is always visible
+            const scaleBarContainer = document.getElementById('scale-bar-container');
+            scaleBarContainer.style.display = 'flex';
+            
+            // Scale bar constants
+            const MICROSCOPE_SCALE_TEXT = "25 μm";
+            const CROSS_SECTION_SCALE_TEXT = "100 μm"; // Changed back to 100 μm
+            const PIXELS_PER_25_UM = 90; // In microscope view, 25μm = 90px
+            
+            // Get scale bar elements
+            const scaleBar = document.getElementById('scale-bar');
+            const scaleText = document.querySelector('#scale-bar-container span');
+            
+            if (viewType === 'cross-section') {
+                // Cross-section view (100 μm)
+                scaleText.textContent = CROSS_SECTION_SCALE_TEXT;
+                
+                // Calculate width ratio for cross-section view
+                // We're now using width/500 scale factor for cross-section
+                const pixelsPerMicron = PIXELS_PER_25_UM / 25; // Pixels per μm in microscope view
+                const scaledWidth = pixelsPerMicron * 100 * 0.25; // 25% of full scale for better fit
+                
+                scaleBar.style.width = `${scaledWidth}px`;
+                // Make scale bar black for better visibility
+                scaleBar.style.height = '4px';
+                scaleBar.style.backgroundColor = '#000';
+                
+                // Make text color black
+                scaleBarContainer.style.color = '#000';
+                scaleBarContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+                
+                // Update the endpoints color to match scale bar
+                const endpointStyle = `
+                    #scale-bar:before, #scale-bar:after {
+                        background-color: #000;
+                        height: 10px;
+                    }
+                `;
+                
+                // Add or update style
+                let styleEl = document.getElementById('scale-bar-style');
+                if (!styleEl) {
+                    styleEl = document.createElement('style');
+                    styleEl.id = 'scale-bar-style';
+                    document.head.appendChild(styleEl);
+                }
+                styleEl.textContent = endpointStyle;
+                
+            } else {
+                // Microscope view (25 μm)
+                scaleText.textContent = MICROSCOPE_SCALE_TEXT;
+                scaleBar.style.width = `${PIXELS_PER_25_UM}px`;
+                // Reset style
+                scaleBar.style.height = '4px';
+                scaleBar.style.backgroundColor = '#000';
+                scaleBarContainer.style.color = '#000';
+                
+                // Reset the endpoints color
+                const endpointStyle = `
+                    #scale-bar:before, #scale-bar:after {
+                        background-color: #000;
+                        height: 10px;
+                    }
+                `;
+                
+                // Update style
+                let styleEl = document.getElementById('scale-bar-style');
+                if (!styleEl) {
+                    styleEl = document.createElement('style');
+                    styleEl.id = 'scale-bar-style';
+                    document.head.appendChild(styleEl);
+                }
+                styleEl.textContent = endpointStyle;
+            }
+        }
+        
+        // Generate initial particles
+        function generateParticles() {
+            // Generate CO2 particles (outside the leaf)
+            for (let i = 0; i < 8; i++) {
+                particles.co2.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height - Math.random() * 150, // Position below the leaf
+                    radius: 5,
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: -Math.random() * 1.5, // Upward trajectory
+                    type: 'co2',
+                    stuckCounter: 0,
+                    lastPosition: { x: 0, y: 0 }
+                });
+            }
+            
+            // Generate O2 particles (inside the leaf)
+            for (let i = 0; i < 6; i++) {
+                particles.o2.push({
+                    x: canvas.width / 2 + (Math.random() - 0.5) * 300,
+                    y: 250 + Math.random() * 100,
+                    radius: 5,
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: Math.random() * -1.5,
+                    type: 'o2'
+                });
+            }
+            
+            // Generate H2O particles (inside the leaf)
+            for (let i = 0; i < 8; i++) {
+                particles.h2o.push({
+                    x: canvas.width / 2 + (Math.random() - 0.5) * 300,
+                    y: 250 + Math.random() * 100,
+                    radius: 5,
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: Math.random() * -1.8,
+                    type: 'h2o'
+                });
+            }
+        }
+        
+        // Add particles for specific view
+        function addParticlesForView() {
+            // Only add particles if in cross-section view
+            if (currentView !== 'cross-section') {
+                particles.co2 = [];
+                particles.o2 = [];
+                particles.h2o = [];
+                return;
+            }
+            
+            // Generate particles if needed
+            if (particles.co2.length === 0) {
+                // CO2 particles (outside leaf)
+                for (let i = 0; i < 8; i++) {
+                    particles.co2.push({
+                        x: Math.random() * canvas.width,
+                        y: canvas.height - Math.random() * 100, // Position below leaf
+                        radius: 5, // Larger particles
+                        speedX: (Math.random() - 0.5) * 2.5, // Faster movement
+                        speedY: -Math.random() * 2.5, // Faster movement
+                        type: 'co2',
+                        stuckCounter: 0,
+                        lastPosition: { x: 0, y: 0 }
+                    });
+                }
+            }
+            
+            if (particles.o2.length === 0) {
+                // O2 particles (inside leaf)
+                for (let i = 0; i < 6; i++) {
+                    particles.o2.push({
+                        x: Math.random() * canvas.width,
+                        y: UPPER_EPIDERMIS_Y + 20 + Math.random() * 50, // Position inside leaf
+                        radius: 5, // Larger particles
+                        speedX: (Math.random() - 0.5) * 2.5, // Faster movement
+                        speedY: (Math.random() - 0.5) * 2.5, // Faster movement
+                        type: 'o2'
+                    });
+                }
+            }
+            
+            if (particles.h2o.length === 0) {
+                // H2O particles (inside the leaf)
+                for (let i = 0; i < 8; i++) {
+                    particles.h2o.push({
+                        x: canvas.width / 2 + (Math.random() - 0.5) * 300,
+                        y: 250 + Math.random() * 100,
+                        radius: 5, // Larger particles
+                        speedX: (Math.random() - 0.5) * 2.5, // Faster movement
+                        speedY: Math.random() * -1.8, // Faster movement
+                        type: 'h2o'
+                    });
+                }
+            }
+        }
+        
+        // Draw the static leaf elements to the offscreen canvas
+        function drawStaticLeafElements(ctx, width, height, scaleFactor) {
+            // Position variables for leaf cross-section - shift leaf to the left and extend fully to right edge
+            const leafStartX = -width * 0.2; // Shift left by 20% of canvas width
+            const leafEndX = width; // Extend to full width to eliminate empty space on right
+            const leafWidth = leafEndX - leafStartX;
+            
+            // Reposition leaf to be centered in canvas and occupy less vertical space
+            const leafCenterY = height * 0.50; // More centered vertically (was 0.42)
+            // Reduced thickness for more zoomed out view
+            const upperEpidermisY = leafCenterY - 85 * scaleFactor; // Reduced from 120 to 85
+            const lowerEpidermisY = leafCenterY + 85 * scaleFactor; // Reduced from 150 to 85
+            
+            // UPDATE GLOBAL BOUNDARY CONSTANTS to match actual drawing
+            UPPER_EPIDERMIS_Y = upperEpidermisY;
+            LOWER_EPIDERMIS_Y = lowerEpidermisY;
+            
+            const leafThickness = lowerEpidermisY - upperEpidermisY;
+            
+            // 1. Draw the leaf outline with curvature
+            ctx.beginPath();
+            // Top curvature
+            ctx.moveTo(leafStartX, upperEpidermisY);
+            ctx.bezierCurveTo(
+                width * 0.0, upperEpidermisY - 15 * scaleFactor, // Adjusted control points
+                width * 0.6, upperEpidermisY - 15 * scaleFactor,
+                leafEndX, upperEpidermisY
+            );
+            
+            // Right edge - now at canvas edge
+            ctx.lineTo(leafEndX, lowerEpidermisY);
+            
+            // Bottom curvature
+            ctx.bezierCurveTo(
+                width * 0.6, lowerEpidermisY + 5 * scaleFactor, // Adjusted control points
+                width * 0.0, lowerEpidermisY + 5 * scaleFactor,
+                leafStartX, lowerEpidermisY
+            );
+            
+            // Left edge - now at canvas edge
+            ctx.lineTo(leafStartX, upperEpidermisY);
+            
+            // Fill with leaf interior color
+            ctx.fillStyle = "#c5e1a5"; // Light green for general leaf interior
+            ctx.fill();
+            
+            // 2. Draw upper epidermis (adaxial) with cuticle
+            const epidermisThickness = 10 * scaleFactor; // Increased thickness
+            const cuticleThickness = 3 * scaleFactor; // Increased thickness
+            
+            // Draw upper cuticle (waxy layer) - extend full width
+            ctx.fillStyle = "rgba(230, 230, 210, 0.8)"; // Translucent waxy color
+            ctx.beginPath();
+            ctx.moveTo(leafStartX, upperEpidermisY);
+            ctx.bezierCurveTo(
+                width * 0.0, upperEpidermisY - 15 * scaleFactor, // Adjusted control points
+                width * 0.6, upperEpidermisY - 15 * scaleFactor,
+                leafEndX, upperEpidermisY
+            );
+            ctx.bezierCurveTo(
+                width * 0.6, upperEpidermisY - 15 * scaleFactor + cuticleThickness,
+                width * 0.0, upperEpidermisY - 15 * scaleFactor + cuticleThickness,
+                leafStartX, upperEpidermisY + cuticleThickness
+            );
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw upper epidermis cells
+            ctx.fillStyle = "#a5d6a7"; // Lighter green for epidermis
+            
+            // Draw individual upper epidermis cells
+            const upperEpidermisCellWidth = 18 * scaleFactor; // Increased cell width
+            for (let x = leafStartX; x < leafEndX; x += upperEpidermisCellWidth) {
+                const cellWidth = upperEpidermisCellWidth * (0.9 + getFixedRandom(x) * 0.2);
+                    
+                    ctx.beginPath();
+                ctx.rect(
+                    x, 
+                    upperEpidermisY, 
+                    cellWidth, 
+                    epidermisThickness
+                );
+                    ctx.fill();
+                
+                // Cell outlines
+                ctx.strokeStyle = "rgba(60, 120, 60, 0.3)";
+                ctx.lineWidth = 0.5 * scaleFactor;
+                ctx.stroke();
+            }
+            
+            // 3. Draw palisade mesophyll (tightly packed columnar cells with many chloroplasts)
+            const palisadeStartY = upperEpidermisY + epidermisThickness;
+            const palisadeHeight = leafThickness * 0.4; // 40% of leaf thickness
+            
+            // Draw individual palisade cells (columnar cells)
+            const palisadeCellWidth = 15 * scaleFactor; // Increased width
+            const palisadeCellHeight = palisadeHeight * 0.9;
+            
+            for (let x = leafStartX; x < leafEndX; x += palisadeCellWidth) {
+                const variability = getFixedRandom(x * 10) * 4 * scaleFactor;
+                const cellWidth = palisadeCellWidth * (0.8 + getFixedRandom(x) * 0.3);
+                
+                // Cell membrane with lighter green for cell wall
+                ctx.strokeStyle = "rgba(100, 160, 100, 0.6)";
+                ctx.lineWidth = 0.9 * scaleFactor;
+                ctx.beginPath();
+                ctx.roundRect(
+                    x,
+                    palisadeStartY + variability,
+                    cellWidth,
+                    palisadeCellHeight - variability,
+                    2 * scaleFactor
+                );
+                ctx.stroke();
+                
+                // Cell cytoplasm with gradient for more realistic appearance
+                const cellGradient = ctx.createLinearGradient(
+                    x, palisadeStartY + variability,
+                    x + cellWidth, palisadeStartY + variability
+                );
+                cellGradient.addColorStop(0, "rgba(129, 199, 132, 0.9)"); // Base green color with transparency
+                cellGradient.addColorStop(0.5, "rgba(129, 199, 132, 0.95)");
+                cellGradient.addColorStop(1, "rgba(129, 199, 132, 0.9)");
+                ctx.fillStyle = cellGradient;
+                ctx.fill();
+                
+                // Add central vacuole (large, lighter area in center of cell)
+                const vacuoleWidth = cellWidth * 0.7;
+                const vacuoleHeight = (palisadeCellHeight - variability) * 0.7;
+                const vacuoleX = x + (cellWidth - vacuoleWidth) / 2;
+                const vacuoleY = palisadeStartY + variability + (palisadeCellHeight - variability - vacuoleHeight) / 2;
+                
+                ctx.fillStyle = "rgba(175, 215, 170, 0.5)"; // Lighter, transparent green
+                ctx.beginPath();
+                ctx.roundRect(
+                    vacuoleX,
+                    vacuoleY,
+                    vacuoleWidth,
+                    vacuoleHeight,
+                    2 * scaleFactor
+                );
+                ctx.fill();
+                
+                // Cell nucleus (small oval near cell wall)
+                const nucleusX = x + cellWidth * 0.2;
+                const nucleusY = palisadeStartY + variability + (palisadeCellHeight - variability) * 0.2;
+                ctx.fillStyle = "rgba(160, 200, 150, 0.7)";
+                ctx.beginPath();
+                ctx.ellipse(
+                    nucleusX,
+                    nucleusY,
+                    2.5 * scaleFactor,
+                    2 * scaleFactor,
+                    0, 0, Math.PI * 2
+                );
+                ctx.fill();
+                ctx.strokeStyle = "rgba(100, 150, 100, 0.5)";
+                ctx.lineWidth = 0.4 * scaleFactor;
+                ctx.stroke();
+                
+                // Add chloroplasts with internal thylakoid structure
+                const chloroplastCount = Math.floor(22 + getFixedRandom(x * 20) * 8); // Increased from 12-17 to 22-30
+                
+                for (let i = 0; i < chloroplastCount; i++) {
+                    // Position chloroplasts around the periphery of the cell (appressed to cell membrane)
+                    // and also distribute throughout the cytoplasm (not in the vacuole)
+                    let xOffset, yOffset;
+                    const positionSeed = getFixedRandom(x + i * 37);
+                    
+                    if (positionSeed < 0.6) { // Increased probability for membrane-associated chloroplasts
+                        // Position along cell membrane (60% of chloroplasts)
+                        if (positionSeed < 0.15) {
+                            // Left side
+                            xOffset = cellWidth * 0.1;
+                            yOffset = getFixedRandom(x + i * 42) * (palisadeCellHeight - variability);
+                        } else if (positionSeed < 0.3) {
+                            // Right side
+                            xOffset = cellWidth * 0.9;
+                            yOffset = getFixedRandom(x + i * 53) * (palisadeCellHeight - variability);
+                        } else if (positionSeed < 0.45) {
+                            // Top
+                            xOffset = getFixedRandom(x + i * 67) * cellWidth;
+                            yOffset = (palisadeCellHeight - variability) * 0.1;
+                        } else {
+                            // Bottom
+                            xOffset = getFixedRandom(x + i * 79) * cellWidth;
+                            yOffset = (palisadeCellHeight - variability) * 0.9;
+                        }
+                    } else {
+                        // Position throughout cytoplasm, avoiding central vacuole (40% of chloroplasts)
+                        const angle = getFixedRandom(x + i * 91) * Math.PI * 2;
+                        const distanceFromCenter = 0.25 + getFixedRandom(x + i * 103) * 0.2; // 0.25-0.45 range
+                        
+                        // Position in cytoplasm layer between membrane and vacuole
+                        xOffset = cellWidth * (0.5 + Math.cos(angle) * distanceFromCenter);
+                        yOffset = (palisadeCellHeight - variability) * (0.5 + Math.sin(angle) * distanceFromCenter);
+                    }
+                    
+                    const chloroplastX = x + xOffset;
+                    const chloroplastY = palisadeStartY + variability + yOffset;
+                    
+                    // Draw chloroplast body (oval shape) - simple version
+                    ctx.fillStyle = "#006400"; // Dark green for chloroplasts
+                    ctx.beginPath();
+                    ctx.ellipse(
+                        chloroplastX, 
+                        chloroplastY, 
+                        3 * scaleFactor,
+                        2 * scaleFactor,
+                        0, 0, Math.PI * 2
+                    );
+                    ctx.fill();
+                    
+                    // No thylakoids or internal structures - removed for performance
+                }
+            }
+            
+            // 4. Draw spongy mesophyll (irregular cells with air spaces)
+            const spongyStartY = palisadeStartY + palisadeHeight;
+            const spongyHeight = (lowerEpidermisY - epidermisThickness) - spongyStartY;
+            
+            // Draw irregular spongy mesophyll cells with air spaces
+            const spongyCellSize = 22 * scaleFactor; // Increased size
+            
+            // Create a grid of potential positions
+            const gridCols = Math.floor(leafWidth / spongyCellSize);
+            const gridRows = Math.floor(spongyHeight / spongyCellSize);
+            
+            for (let col = 0; col < gridCols; col++) {
+                for (let row = 0; row < gridRows; row++) {
+                    // Add randomness to position and only place cells at ~60% of positions (leaving air spaces)
+                    if (getFixedRandom(col * 100 + row * 10) < 0.6) {
+                        const x = leafStartX + col * spongyCellSize + getFixedRandom(col * row) * spongyCellSize * 0.5;
+                        const y = spongyStartY + row * spongyCellSize + getFixedRandom(col + row * 10) * spongyCellSize * 0.5;
+                        const size = spongyCellSize * (0.7 + getFixedRandom(col * row * 100) * 0.4);
+                        
+                        // Draw cell membrane with gradient for depth
+                        ctx.strokeStyle = "rgba(100, 160, 100, 0.6)";
+                        ctx.lineWidth = 0.9 * scaleFactor;
+                        ctx.beginPath();
+                        ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+                        ctx.stroke();
+                        
+                        // Cell cytoplasm with gradient
+                        const cellGradient = ctx.createRadialGradient(
+                            x - size * 0.1, y - size * 0.1, 0,
+                            x, y, size / 2
+                        );
+                        cellGradient.addColorStop(0, "rgba(174, 213, 129, 0.9)"); // Lighter center
+                        cellGradient.addColorStop(1, "rgba(164, 203, 119, 0.8)"); // Slightly darker edge
+                        ctx.fillStyle = cellGradient;
+                        ctx.fill();
+                        
+                        // Add central vacuole (large, lighter area in center of cell)
+                        const vacuoleSize = size * 0.6;
+                        ctx.fillStyle = "rgba(190, 220, 170, 0.5)"; // Lighter, transparent green
+                        ctx.beginPath();
+                        ctx.arc(x, y, vacuoleSize / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Cell nucleus
+                        const nucleusAngle = getFixedRandom(x * y * 57) * Math.PI * 2;
+                        const nucleusDistance = size * 0.3;
+                        const nucleusX = x + Math.cos(nucleusAngle) * nucleusDistance;
+                        const nucleusY = y + Math.sin(nucleusAngle) * nucleusDistance;
+                        
+                        ctx.fillStyle = "rgba(160, 200, 150, 0.7)";
+                        ctx.beginPath();
+                        ctx.ellipse(
+                            nucleusX,
+                            nucleusY,
+                            2 * scaleFactor,
+                            1.8 * scaleFactor,
+                            0, 0, Math.PI * 2
+                        );
+                        ctx.fill();
+                        ctx.strokeStyle = "rgba(100, 150, 100, 0.5)";
+                        ctx.lineWidth = 0.4 * scaleFactor;
+                        ctx.stroke();
+                        
+                        // Add chloroplasts to spongy mesophyll cells
+                        const chloroplastCount = Math.floor(5 + getFixedRandom(x * y) * 4);
+                        
+                        for (let i = 0; i < chloroplastCount; i++) {
+                            // Position chloroplasts around the cell periphery
+                            const angle = getFixedRandom(x + i * y * 13) * Math.PI * 2;
+                            const distance = size * 0.35; // Near cell membrane
+                            const chloroplastX = x + Math.cos(angle) * distance;
+                            const chloroplastY = y + Math.sin(angle) * distance;
+                            
+                            // Draw chloroplast body (oval shape) - simple version
+                            ctx.fillStyle = "#006400"; // Dark green for chloroplasts
+                            ctx.beginPath();
+                            ctx.ellipse(
+                                chloroplastX, 
+                                chloroplastY, 
+                                3 * scaleFactor,
+                                2 * scaleFactor,
+                                0, 0, Math.PI * 2
+                            );
+                            ctx.fill();
+                            
+                            // No thylakoids or internal structures - removed for performance
+                        }
+                    }
+                }
+            }
+            
+            // 5. Draw vascular bundle (mid-vein cross section)
+            const veinCenterX = width * 0.3; // Shifted from center (width/2) to left side (30% of width)
+            const veinCenterY = (upperEpidermisY + lowerEpidermisY) / 2;
+            const veinWidth = 50 * scaleFactor; // Increased size
+            const veinHeight = 36 * scaleFactor; // Increased size
+            
+            // Bundle sheath
+            ctx.fillStyle = "#c5e1a5"; // Lighter green for bundle sheath
+            ctx.beginPath();
+            ctx.ellipse(veinCenterX, veinCenterY, veinWidth / 2, veinHeight / 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.strokeStyle = "rgba(60, 120, 60, 0.4)";
+            ctx.lineWidth = 0.7 * scaleFactor;
+            ctx.stroke();
+            
+            // Xylem (upper half of vein - water transport)
+            ctx.fillStyle = "#ffe0b2"; // Light tan/brown for xylem
+            ctx.beginPath();
+            ctx.ellipse(
+                veinCenterX, 
+                veinCenterY - veinHeight * 0.15, 
+                veinWidth * 0.35, 
+                veinHeight * 0.25, 
+                0, 0, Math.PI * 2
+            );
+            ctx.fill();
+            
+            // Xylem vessels (circular tubes)
+            ctx.fillStyle = "#fff8e1"; // Very light color for xylem lumen
+            for (let i = 0; i < 3; i++) {
+                const xOffset = (i - 1) * veinWidth * 0.2;
+                
+                ctx.beginPath();
+                ctx.arc(
+                    veinCenterX + xOffset,
+                    veinCenterY - veinHeight * 0.15,
+                    veinHeight * 0.1,
+                    0, Math.PI * 2
+                );
+                ctx.fill();
+                
+                // Vessel wall
+                ctx.strokeStyle = "#d7ccc8"; // Light brown for cell walls
+                ctx.lineWidth = 0.8 * scaleFactor;
+                ctx.stroke();
+            }
+            
+            // Phloem (lower half of vein - sugar transport)
+            ctx.fillStyle = "#b2ebf2"; // Light blue-green for phloem
+            ctx.beginPath();
+            ctx.ellipse(
+                veinCenterX, 
+                veinCenterY + veinHeight * 0.15, 
+                veinWidth * 0.3, 
+                veinHeight * 0.2, 
+                0, 0, Math.PI * 2
+            );
+            ctx.fill();
+            
+            // Phloem sieve tubes and companion cells
+            for (let i = 0; i < 4; i++) {
+                const xOffset = (i - 1.5) * veinWidth * 0.15;
+                
+                // Sieve tube
+                ctx.fillStyle = "#e0f7fa"; // Very light blue for sieve elements
+                ctx.beginPath();
+                ctx.arc(
+                    veinCenterX + xOffset,
+                    veinCenterY + veinHeight * 0.15,
+                    veinHeight * 0.06,
+                    0, Math.PI * 2
+                );
+                ctx.fill();
+                
+                // Companion cell
+                ctx.fillStyle = "#80deea"; // Darker blue for companion cells
+                ctx.beginPath();
+                ctx.arc(
+                    veinCenterX + xOffset + veinHeight * 0.07,
+                    veinCenterY + veinHeight * 0.15,
+                    veinHeight * 0.04,
+                    0, Math.PI * 2
+                );
+                ctx.fill();
+            }
+            
+            // 6. Draw lower epidermis with stomata (abaxial)
+            ctx.fillStyle = "#a5d6a7"; // Lighter green for epidermis
+            
+            // Draw individual lower epidermis cells
+            const lowerEpidermisCellWidth = 18 * scaleFactor; // Increased size
+            for (let x = leafStartX; x < leafEndX; x += lowerEpidermisCellWidth) {
+                // Skip where stomata will be
+                const cellWidth = lowerEpidermisCellWidth * (0.9 + getFixedRandom(x) * 0.2);
+                
+                // Skip positions where stomata will be placed - wider skip area for larger stomata
+                // Shifted stomata positions to match shifted leaf
+                if (Math.abs(x - width * 0.32) < 35 * scaleFactor || 
+                    Math.abs(x - width * 0.72) < 35 * scaleFactor) {
+                    continue;
+                }
+                
+                ctx.beginPath();
+                ctx.rect(
+                    x, 
+                    lowerEpidermisY - epidermisThickness, 
+                    cellWidth, 
+                    epidermisThickness
+                );
+                ctx.fill();
+                
+                // Cell outlines
+                ctx.strokeStyle = "rgba(60, 120, 60, 0.3)";
+                ctx.lineWidth = 0.5 * scaleFactor;
+                ctx.stroke();
+            }
+            
+            // 7. Draw stomata in lower epidermis - ENHANCED VERSION
+            // Stomata positions to match shifted leaf
+            const stomataPositions = [width * 0.32, width * 0.72]; // Shifted from 0.42/0.82 to 0.32/0.72
+            
+            // Calculate stomatal opening based on aperture
+            const apertureFactor = simulationData.stomatalAperture / 100;
+            
+            for (const stomataX of stomataPositions) {
+                // Make stomata smaller to fit under 25 μm scale
+                const microStomataSize = 22; // Reduced from 40 to 22
+                const microScaleRatio = width / 500; // Both use same base scaling
+                
+                // Scale stomata similarly in both views but smaller
+                const stomatalWidth = microStomataSize * microScaleRatio;
+                const stomatalHeight = microStomataSize * 0.5 * microScaleRatio;
+                const openingWidth = stomatalWidth * 0.55 * apertureFactor;
+                
+                // Position stomata exactly between epidermal cells
+                const guardCellY = lowerEpidermisY - epidermisThickness;
+                
+                // Add highlight/glow effect for stomata (more subtle)
+                ctx.fillStyle = "rgba(160, 255, 160, 0.3)"; // Reduced opacity from 0.4 to 0.3
+                ctx.beginPath();
+                ctx.ellipse(
+                    stomataX,
+                    guardCellY,
+                    stomatalWidth * 0.9, // Reduced from 1.0 to 0.9
+                    stomatalHeight * 1.2, // Reduced from 1.4 to 1.2
+                    0, 0, Math.PI * 2
+                );
+                ctx.fill();
+                
+                // Draw stomatal pore with enhanced visibility
+                if (apertureFactor > 0.05) {
+                    // Create a stronger glow for the pore
+                    const poreGlow = ctx.createRadialGradient(
+                        stomataX, guardCellY, 1,
+                        stomataX, guardCellY, openingWidth
+                    );
+                    poreGlow.addColorStop(0, "rgba(10, 20, 5, 1)"); // Darker center
+                    poreGlow.addColorStop(1, "rgba(40, 70, 30, 0.6)"); // More visible glow
+                    
+                    ctx.fillStyle = poreGlow;
+                    ctx.beginPath();
+                    ctx.ellipse(
+                        stomataX,
+                        guardCellY,
+                        openingWidth / 2 + 2.5 * scaleFactor, // Reduced from 3 to 2.5
+                        stomatalHeight / 4 + 2.5 * scaleFactor, // Reduced from 3 to 2.5
+                        0, 0, Math.PI * 2
+                    );
+                    ctx.fill();
+                    
+                    // Actual pore
+                    ctx.fillStyle = "#0a1a00"; // Almost black for better contrast
+                    ctx.beginPath();
+                    ctx.ellipse(
+                        stomataX,
+                        guardCellY,
+                        openingWidth / 2,
+                        stomatalHeight / 4,
+                        0, 0, Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+                
+                // Draw guard cells with enhanced colors and definition
+                ctx.fillStyle = "#6ee945"; // Even brighter green for guard cells
+                
+                // Add stronger drop shadow for better 3D effect on guard cells
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'; // Reduced opacity from 0.6 to 0.5
+                ctx.shadowBlur = 5; // Reduced from 6 to 5
+                ctx.shadowOffsetX = 1; // Reduced from 2 to 1
+                ctx.shadowOffsetY = 1; // Reduced from 2 to 1
+                
+                // Left guard cell - more bean-shaped for realism
+                ctx.beginPath();
+                // Create bean shape path
+                const leftCenterX = stomataX - openingWidth / 2 - stomatalWidth * 0.25;
+                
+                ctx.beginPath();
+                ctx.arc(
+                    leftCenterX - stomatalWidth * 0.06, 
+                    guardCellY - stomatalHeight * 0.15,
+                    stomatalWidth * 0.20, // Reduced from 0.22 to 0.20
+                    0.9 * Math.PI, 1.8 * Math.PI
+                );
+                ctx.arc(
+                    leftCenterX + stomatalWidth * 0.06, 
+                    guardCellY + stomatalHeight * 0.15,
+                    stomatalWidth * 0.20, // Reduced from 0.22 to 0.20
+                    1.9 * Math.PI, 0.8 * Math.PI
+                );
+                ctx.closePath();
+                ctx.fill();
+                
+                // Right guard cell
+                const rightCenterX = stomataX + openingWidth / 2 + stomatalWidth * 0.25;
+                
+                ctx.beginPath();
+                ctx.arc(
+                    rightCenterX + stomatalWidth * 0.06, 
+                    guardCellY - stomatalHeight * 0.15,
+                    stomatalWidth * 0.20, // Reduced from 0.22 to 0.20
+                    1.2 * Math.PI, 2.1 * Math.PI
+                );
+                ctx.arc(
+                    rightCenterX - stomatalWidth * 0.06, 
+                    guardCellY + stomatalHeight * 0.15,
+                    stomatalWidth * 0.20, // Reduced from 0.22 to 0.20
+                    0.1 * Math.PI, 1.1 * Math.PI
+                );
+                ctx.closePath();
+                ctx.fill();
+                
+                // Reset shadow
+                ctx.shadowColor = 'transparent';
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+                
+                // Add DARKER guard cell outlines with thinner lines for better definition
+                ctx.strokeStyle = "rgba(0, 60, 0, 0.9)"; // Changed to darker green with higher opacity
+                ctx.lineWidth = 0.8 * scaleFactor; // Thinner line for more definition
+                
+                // Left guard cell outline
+                ctx.beginPath();
+                ctx.arc(
+                    leftCenterX - stomatalWidth * 0.06, 
+                    guardCellY - stomatalHeight * 0.15,
+                    stomatalWidth * 0.20, // Reduced from 0.22 to 0.20
+                    0.9 * Math.PI, 1.8 * Math.PI
+                );
+                ctx.arc(
+                    leftCenterX + stomatalWidth * 0.06, 
+                    guardCellY + stomatalHeight * 0.15,
+                    stomatalWidth * 0.20, // Reduced from 0.22 to 0.20
+                    1.9 * Math.PI, 0.8 * Math.PI
+                );
+                ctx.closePath();
+                ctx.stroke();
+                
+                // Right guard cell outline
+                ctx.beginPath();
+                ctx.arc(
+                    rightCenterX + stomatalWidth * 0.06, 
+                    guardCellY - stomatalHeight * 0.15,
+                    stomatalWidth * 0.20, // Reduced from 0.22 to 0.20
+                    1.2 * Math.PI, 2.1 * Math.PI
+                );
+                ctx.arc(
+                    rightCenterX - stomatalWidth * 0.06, 
+                    guardCellY + stomatalHeight * 0.15,
+                    stomatalWidth * 0.20, // Reduced from 0.22 to 0.20
+                    0.1 * Math.PI, 1.1 * Math.PI
+                );
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+        
+        function drawScaleBar(ctx, width, height, view) {
+            // Scale bar position
+            const scaleBarX = width - 120 * (width / 800);
+            const scaleBarY = height - 40 * (height / 600);
+            const scaleBarWidth = 80 * (width / 800);
+            const scaleBarHeight = 4 * (height / 600);
+            
+            // Draw white rectangle with shadow for visibility
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+            ctx.shadowBlur = 6;
+            ctx.shadowOffsetX = 1;
+            ctx.shadowOffsetY = 1;
+            
+            ctx.fillStyle = 'white';
+            ctx.fillRect(scaleBarX, scaleBarY, scaleBarWidth, scaleBarHeight);
+            
+            // Reset shadow
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            
+            // Add scale label
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${Math.max(12, Math.min(16, 14 * (width / 800)))}px Arial`;
+            ctx.textAlign = 'center';
+            
+            // Different scales for different views
+            if (view === 'microscope') {
+                ctx.fillText('25 μm', scaleBarX + scaleBarWidth / 2, scaleBarY - 8);
+            } else {
+                ctx.fillText('100 μm', scaleBarX + scaleBarWidth / 2, scaleBarY - 8);
+            }
+            
+            ctx.restore();
+        }
+
+        // Function to calculate light intensity based on time of day
+        function calculateLightIntensity(timeOfDay) {
+            // Maximum light at noon (12:00), decreases toward dawn/dusk, minimum at night
+            if (timeOfDay >= 6 && timeOfDay < 18) {
+                // Daytime: gentler curve with peak at noon
+                // Using a modified sine function with a power to flatten the curve
+                const hoursSinceDown = timeOfDay - 6; // 0 at 6am, 6 at noon, 12 at 6pm
+                const normalizedPosition = hoursSinceDown / 12; // 0 to 1 across the day
+                
+                // Apply a power less than 1 to create a flatter top curve
+                // This makes the curve less steep around noon
+                const flatteningFactor = 0.5; // Lower values make a flatter curve
+                
+                // Create a flatter sine curve that stays higher around noon
+                // Add an offset to ensure we start at 30% at 6am (not at 0%)
+                const baseIntensity = Math.sin(normalizedPosition * Math.PI);
+                const flattenedIntensity = Math.pow(baseIntensity, flatteningFactor);
+                
+                // For points close to 6am, ensure we maintain at least the twilight level (30%)
+                if (timeOfDay < 6.5) {
+                    // Linear blend between 30% and the calculated value in the first half hour
+                    const blend = (timeOfDay - 6) * 2; // 0 to 1 over 30 minutes
+                    const calculatedValue = Math.round(flattenedIntensity * 100);
+                    return Math.max(30, Math.round(30 + (calculatedValue - 30) * blend));
+                }
+                
+                // Scale it to 0-100 range and round to integer
+                return Math.round(flattenedIntensity * 100);
+            } else if (timeOfDay >= 18 && timeOfDay <= 20) {
+                // Evening twilight - gradual decrease 
+                // Start from 30% at 6pm and decrease to 5% by 8pm
+                const twilightProgress = (timeOfDay - 18) / 2; // 0 to 1
+                return Math.round(30 - (twilightProgress * 25)); // 30% down to 5%
+            } else if (timeOfDay >= 4 && timeOfDay < 6) {
+                // Morning twilight - gradual increase
+                // Start from 5% at 4am and increase to 30% by 6am
+                const twilightProgress = (timeOfDay - 4) / 2; // 0 to 1
+                return Math.round(5 + (twilightProgress * 25)); // 5% up to 30%
+            } else {
+                // Night time (20-4) - very low light
+                return 5;
+            }
+        }
+
+        // Update the light indicator based on time of day
+        function updateLightIndicator(timeOfDay) {
+            const intensity = calculateLightIntensity(timeOfDay);
+            environmentFactors.lightIntensity = intensity;
+            lightValue.textContent = `${intensity}%`;
+            effectiveLightIndicator.style.width = `${intensity}%`;
+        }
+    </script>
+</body>
+</html>
